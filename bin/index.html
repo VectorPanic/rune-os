@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Rune OS</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        
+        <!-- COMPILED RUNE OS -->
+        <script src="../dist/source/runeos.js"></script>
+        
+        <!-- BOOTSTRAP -->
+        <script>
+            runeos.system.Startup.start().catch(function(error) {
+                console.error("Rune OS startup failed:", error);
+            });
+            
+        </script>
+    </head>
+</html>

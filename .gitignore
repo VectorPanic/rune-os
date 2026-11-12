@@ -1,0 +1,22 @@
+# SYSTEM FILES
+.DS_Store
+
+# IDE FILES
+.nova
+
+# NPM
+node_modules
+
+# TEMP FILES
+asset/tmp
+library/remote/
+
+# TEST FILES
+scripts/tests
+
+# DISTRIBUTION FILES
+dist
+
+# LOG FILES
+/scripts/log/
+library/log/

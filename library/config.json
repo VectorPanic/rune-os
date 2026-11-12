@@ -1,0 +1,54 @@
+{
+  "library": {
+    "stages": [
+      "gold",
+      "beta",
+      "alpha"
+    ]
+  },
+  "sync": {
+    "enabled": true,
+    "apiEnabled": true,
+    "baseUrl": "http://localhost:8888/rune-cloud/v1/"
+  },
+  "audio": {
+    "masterVolume": 1,
+    "muted": false
+  },
+  "selector": {
+    "refreshHoldMs": 3000,
+    "idleEnabled": true,
+    "idleDelayMs": 15000,
+    "idleOpacity": 0.5,
+    "screensaverEnabled": true,
+    "screensaverDelayMs": 30000
+  },
+  "input": {
+    "useKeyboard": true,
+    "useGamepads": true,
+    "navigationStick": "right",
+    "exitHoldMs": 1500
+  },
+  "exitIndicator": {
+    "enabled": true,
+    "delayMs": 200
+  },
+  "launcherBackground": {
+    "enabled": true,
+    "fieldOpacity": 0.150,
+    "periodMs": 25000
+  },
+  "screensaverCredits": {
+    "fadeInMs": 2500,
+    "enabled": true,
+    "minFontSizePx": 12,
+    "holdMs": 5000,
+    "fadeOutMs": 1000
+  },
+  "screensaverTransition": {
+    "coverMs": 300,
+    "revealMs": 400,
+    "creditsDelayMs": 500,
+    "rotationIntervalMs": 300000
+  }
+}

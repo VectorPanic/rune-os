@@ -1,0 +1,241 @@
+{
+  "tags": [
+    {
+      "id": "action",
+      "name": "Action",
+      "kind": "base",
+      "description": "Shooting, fighting and real-time action."
+    },
+    {
+      "id": "platformer",
+      "name": "Platformer",
+      "kind": "base",
+      "description": "Jumping, movement and obstacle traversal."
+    },
+    {
+      "id": "adventure",
+      "name": "Adventure",
+      "kind": "base",
+      "description": "Exploration, narrative and discovery."
+    },
+    {
+      "id": "puzzle",
+      "name": "Puzzle",
+      "kind": "base",
+      "description": "Logic and problem solving."
+    },
+    {
+      "id": "strategy",
+      "name": "Strategy",
+      "kind": "base",
+      "description": "Tactics, planning and resource decisions."
+    },
+    {
+      "id": "role-playing",
+      "name": "Role-playing",
+      "kind": "base",
+      "description": "Character growth, roles and equipment."
+    },
+    {
+      "id": "sports",
+      "name": "Sports",
+      "kind": "base",
+      "description": "Sports and athletic activities."
+    },
+    {
+      "id": "racing",
+      "name": "Racing",
+      "kind": "base",
+      "description": "Races and competition over a course."
+    },
+    {
+      "id": "simulation",
+      "name": "Simulation",
+      "kind": "base",
+      "description": "Simulation of vehicles, jobs or systems."
+    },
+    {
+      "id": "management",
+      "name": "Management",
+      "kind": "base",
+      "description": "Operating and developing cities or organizations."
+    },
+    {
+      "id": "creative",
+      "name": "Creative",
+      "kind": "base",
+      "description": "Free creation, building and experimentation."
+    },
+    {
+      "id": "rhythm",
+      "name": "Rhythm",
+      "kind": "base",
+      "description": "Music and rhythmic play."
+    },
+    {
+      "id": "tabletop",
+      "name": "Tabletop",
+      "kind": "base",
+      "description": "Card, board and dice games."
+    },
+    {
+      "id": "trivia",
+      "name": "Trivia",
+      "kind": "base",
+      "description": "Knowledge, quizzes and guessing."
+    },
+    {
+      "id": "party",
+      "name": "Party",
+      "kind": "base",
+      "description": "Social minigames and group activities."
+    },
+    {
+      "id": "fast-paced",
+      "name": "Fast-paced",
+      "kind": "modifier",
+      "group": "pace",
+      "description": "High tempo and frequent action."
+    },
+    {
+      "id": "relaxed",
+      "name": "Relaxed",
+      "kind": "modifier",
+      "group": "pace",
+      "description": "Calm play with little time pressure."
+    },
+    {
+      "id": "chaotic",
+      "name": "Chaotic",
+      "kind": "modifier",
+      "group": "pace",
+      "description": "Unpredictable situations and simultaneous events."
+    },
+    {
+      "id": "tense",
+      "name": "Tense",
+      "kind": "modifier",
+      "group": "pace",
+      "description": "Anticipation, uncertainty and pressure."
+    },
+    {
+      "id": "reflex",
+      "name": "Reflex",
+      "kind": "modifier",
+      "group": "skill",
+      "description": "React quickly to changing situations."
+    },
+    {
+      "id": "precision",
+      "name": "Precision",
+      "kind": "modifier",
+      "group": "skill",
+      "description": "Accurate and deliberate actions."
+    },
+    {
+      "id": "timing",
+      "name": "Timing",
+      "kind": "modifier",
+      "group": "skill",
+      "description": "Act at the right moment."
+    },
+    {
+      "id": "planning",
+      "name": "Planning",
+      "kind": "modifier",
+      "group": "skill",
+      "description": "Consider consequences and plan ahead."
+    },
+    {
+      "id": "problem-solving",
+      "name": "Problem-solving",
+      "kind": "modifier",
+      "group": "skill",
+      "description": "Reason through challenges and find solutions."
+    },
+    {
+      "id": "combat",
+      "name": "Combat",
+      "kind": "modifier",
+      "group": "activity",
+      "description": "Fight enemies or other players."
+    },
+    {
+      "id": "avoidance",
+      "name": "Avoidance",
+      "kind": "modifier",
+      "group": "activity",
+      "description": "Avoid threats and obstacles."
+    },
+    {
+      "id": "exploration",
+      "name": "Exploration",
+      "kind": "modifier",
+      "group": "activity",
+      "description": "Explore places, routes and secrets."
+    },
+    {
+      "id": "collection",
+      "name": "Collection",
+      "kind": "modifier",
+      "group": "activity",
+      "description": "Gather items or resources."
+    },
+    {
+      "id": "building",
+      "name": "Building",
+      "kind": "modifier",
+      "group": "activity",
+      "description": "Construct and shape structures."
+    },
+    {
+      "id": "resource-management",
+      "name": "Resource management",
+      "kind": "modifier",
+      "group": "activity",
+      "description": "Allocate and manage limited resources."
+    },
+    {
+      "id": "survival",
+      "name": "Survival",
+      "kind": "modifier",
+      "group": "structure",
+      "description": "Survive threats and sustained pressure."
+    },
+    {
+      "id": "score-attack",
+      "name": "Score attack",
+      "kind": "modifier",
+      "group": "structure",
+      "description": "Pursue and improve high scores."
+    },
+    {
+      "id": "time-trial",
+      "name": "Time trial",
+      "kind": "modifier",
+      "group": "structure",
+      "description": "Improve completion times."
+    },
+    {
+      "id": "progression",
+      "name": "Progression",
+      "kind": "modifier",
+      "group": "structure",
+      "description": "Advance through goals, stages or upgrades."
+    },
+    {
+      "id": "story-driven",
+      "name": "Story-driven",
+      "kind": "modifier",
+      "group": "structure",
+      "description": "Follow an unfolding narrative."
+    },
+    {
+      "id": "open-ended",
+      "name": "Open-ended",
+      "kind": "modifier",
+      "group": "structure",
+      "description": "Choose goals without a fixed ending."
+    }
+  ]
+}

@@ -1,0 +1,473 @@
+{
+  "categories": [
+    {
+      "id": "action-central",
+      "name": "Action Central",
+      "description": "Jump into games built around action, combat and quick reactions.",
+      "eligibility": {
+        "baseAny": [
+          "action"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 70,
+        "modifierWeight": 30,
+        "playerWeight": 0,
+        "baseAny": [
+          "action"
+        ],
+        "modifierWeights": {
+          "combat": 50,
+          "reflex": 30,
+          "fast-paced": 20
+        }
+      }
+    },
+    {
+      "id": "jump-and-run",
+      "name": "Jump & Run",
+      "description": "Jump, move and find your way through platforms and obstacles.",
+      "eligibility": {
+        "baseAny": [
+          "platformer"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 75,
+        "modifierWeight": 25,
+        "playerWeight": 0,
+        "baseAny": [
+          "platformer"
+        ],
+        "modifierWeights": {
+          "timing": 40,
+          "precision": 30,
+          "avoidance": 30
+        }
+      }
+    },
+    {
+      "id": "adventures-await",
+      "name": "Adventures Await",
+      "description": "Discover adventures, follow stories and develop your character.",
+      "eligibility": {
+        "baseAny": [
+          "adventure",
+          "role-playing"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 80,
+        "modifierWeight": 20,
+        "playerWeight": 0,
+        "baseAny": [
+          "adventure",
+          "role-playing"
+        ],
+        "modifierWeights": {
+          "exploration": 40,
+          "story-driven": 40,
+          "progression": 20
+        }
+      }
+    },
+    {
+      "id": "puzzle-and-strategy",
+      "name": "Puzzle & Strategy",
+      "description": "Solve problems, consider your options and put your plans into action.",
+      "eligibility": {
+        "baseAny": [
+          "puzzle",
+          "strategy"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 80,
+        "modifierWeight": 20,
+        "playerWeight": 0,
+        "baseAny": [
+          "puzzle",
+          "strategy"
+        ],
+        "modifierWeights": {
+          "planning": 50,
+          "problem-solving": 50
+        }
+      }
+    },
+    {
+      "id": "sports-and-racing",
+      "name": "Sports & Racing",
+      "description": "Take to the field or the track and put your skills to the test.",
+      "eligibility": {
+        "baseAny": [
+          "sports",
+          "racing"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 80,
+        "modifierWeight": 20,
+        "playerWeight": 0,
+        "baseAny": [
+          "sports",
+          "racing"
+        ],
+        "modifierWeights": {
+          "precision": 35,
+          "timing": 25,
+          "reflex": 20,
+          "fast-paced": 20
+        }
+      }
+    },
+    {
+      "id": "build-and-create",
+      "name": "Build & Create",
+      "description": "Create freely or build something of your own, across different kinds of games.",
+      "eligibility": {
+        "anyOf": [
+          {
+            "baseAny": [
+              "creative"
+            ],
+            "baseMinimum": 40
+          },
+          {
+            "tagsAny": [
+              "building"
+            ],
+            "tagMinimum": 50
+          }
+        ]
+      },
+      "ranking": {
+        "baseWeight": 50,
+        "modifierWeight": 50,
+        "playerWeight": 0,
+        "baseAny": [
+          "creative"
+        ],
+        "modifierWeights": {
+          "building": 80,
+          "open-ended": 20
+        }
+      }
+    },
+    {
+      "id": "simulation-and-management",
+      "name": "Simulation & Management",
+      "description": "Explore simulated systems, manage resources and bring your plans to life.",
+      "eligibility": {
+        "baseAny": [
+          "simulation",
+          "management"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 80,
+        "modifierWeight": 20,
+        "playerWeight": 0,
+        "baseAny": [
+          "simulation",
+          "management"
+        ],
+        "modifierWeights": {
+          "resource-management": 60,
+          "planning": 40
+        }
+      }
+    },
+    {
+      "id": "cards-boards-and-dice",
+      "name": "Cards, Boards & Dice",
+      "description": "Explore card, board and dice games, from casual play to careful strategy.",
+      "eligibility": {
+        "baseAny": [
+          "tabletop"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 80,
+        "modifierWeight": 20,
+        "playerWeight": 0,
+        "baseAny": [
+          "tabletop"
+        ],
+        "modifierWeights": {
+          "planning": 60,
+          "problem-solving": 40
+        }
+      }
+    },
+    {
+      "id": "quiz-time",
+      "name": "Quiz Time",
+      "description": "Test your knowledge with quizzes, questions and guessing games.",
+      "eligibility": {
+        "baseAny": [
+          "trivia"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 100,
+        "modifierWeight": 0,
+        "playerWeight": 0,
+        "baseAny": [
+          "trivia"
+        ]
+      }
+    },
+    {
+      "id": "rhythm-and-music",
+      "name": "Rhythm & Music",
+      "description": "Follow the music, find the rhythm and get your timing right.",
+      "eligibility": {
+        "baseAny": [
+          "rhythm"
+        ],
+        "baseMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 85,
+        "modifierWeight": 15,
+        "playerWeight": 0,
+        "baseAny": [
+          "rhythm"
+        ],
+        "modifierWeights": {
+          "timing": 70,
+          "precision": 20,
+          "reflex": 10
+        }
+      }
+    },
+    {
+      "id": "party-time",
+      "name": "Party Time",
+      "description": "Bring people together with social minigames and group activities.",
+      "eligibility": {
+        "baseAny": [
+          "party"
+        ],
+        "baseMinimum": 40,
+        "minimumMaxPlayers": 2
+      },
+      "ranking": {
+        "baseWeight": 70,
+        "modifierWeight": 15,
+        "playerWeight": 15,
+        "baseAny": [
+          "party"
+        ],
+        "modifierWeights": {
+          "chaotic": 100
+        },
+        "playerScores": [
+          {
+            "min": 2,
+            "score": 60
+          },
+          {
+            "min": 4,
+            "score": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "better-together",
+      "name": "Better Together",
+      "description": "Team up and overcome challenges together, whatever the genre.",
+      "eligibility": {
+        "requiredMode": "coop",
+        "minimumMaxPlayers": 2
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 15,
+        "playerWeight": 85,
+        "modifierWeights": {
+          "exploration": 40,
+          "progression": 35,
+          "problem-solving": 25
+        },
+        "playerScores": [
+          {
+            "min": 2,
+            "score": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "versus-arena",
+      "name": "Versus Arena",
+      "description": "Compete against other players, from calm contests to all-out battles.",
+      "eligibility": {
+        "requiredMode": "versus",
+        "minimumMaxPlayers": 2
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 0,
+        "playerWeight": 100,
+        "playerScores": [
+          {
+            "min": 2,
+            "score": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "multiplayer-mayhem",
+      "name": "Multiplayer Mayhem",
+      "description": "Face off in fast or chaotic multiplayer competition.",
+      "eligibility": {
+        "requiredMode": "versus",
+        "minimumMaxPlayers": 2,
+        "tagsAny": [
+          "chaotic",
+          "fast-paced"
+        ],
+        "tagMinimum": 40
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 75,
+        "playerWeight": 25,
+        "modifierWeights": {
+          "chaotic": 60,
+          "fast-paced": 30,
+          "reflex": 10
+        },
+        "playerScores": [
+          {
+            "min": 2,
+            "score": 40
+          },
+          {
+            "min": 3,
+            "score": 70
+          },
+          {
+            "min": 4,
+            "score": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "solo-spotlight",
+      "name": "Solo Spotlight",
+      "description": "Discover games made exclusively for one player, across every genre.",
+      "eligibility": {
+        "maximumMinPlayers": 1,
+        "maximumMaxPlayers": 1
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 0,
+        "playerWeight": 100,
+        "playerScores": [
+          {
+            "min": 1,
+            "score": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "score-chasers",
+      "name": "Score Chasers",
+      "description": "Chase high scores, improve your personal best and set new records.",
+      "eligibility": {
+        "tagsAny": [
+          "score-attack"
+        ],
+        "tagMinimum": 50
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 100,
+        "playerWeight": 0,
+        "modifierWeights": {
+          "score-attack": 100
+        }
+      }
+    },
+    {
+      "id": "beat-the-clock",
+      "name": "Beat the Clock",
+      "description": "Race against the clock and work towards a better completion time.",
+      "eligibility": {
+        "tagsAny": [
+          "time-trial"
+        ],
+        "tagMinimum": 50
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 100,
+        "playerWeight": 0,
+        "modifierWeights": {
+          "time-trial": 100
+        }
+      }
+    },
+    {
+      "id": "explore-and-discover",
+      "name": "Explore & Discover",
+      "description": "Seek out places, routes and secrets in games with a focus on exploration.",
+      "eligibility": {
+        "tagsAny": [
+          "exploration"
+        ],
+        "tagMinimum": 50
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 100,
+        "playerWeight": 0,
+        "modifierWeights": {
+          "exploration": 80,
+          "collection": 10,
+          "progression": 10
+        }
+      }
+    },
+    {
+      "id": "take-it-easy",
+      "name": "Take It Easy",
+      "description": "Settle into games with a clearly relaxed pace and little time pressure.",
+      "eligibility": {
+        "tagsAny": [
+          "relaxed"
+        ],
+        "tagMinimum": 50
+      },
+      "ranking": {
+        "baseWeight": 0,
+        "modifierWeight": 100,
+        "playerWeight": 0,
+        "modifierWeights": {
+          "relaxed": 100
+        }
+      }
+    }
+  ],
+  "fallback": {
+    "id": "more-to-explore",
+    "name": "More to Explore",
+    "description": "Discover games not yet represented in another category."
+  }
+}

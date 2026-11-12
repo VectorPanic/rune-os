@@ -1,0 +1,25 @@
+{
+  "name": "rune-os",
+  "version": "1.0.0",
+  "description": "A launcher for Rune SDK applications",
+  "main": "bin/bootstrap.js",
+  "scripts": {
+    "build": "bash scripts/shell/make.sh",
+    "build:icon": "bash scripts/shell/compose.sh",
+    "test": "electron ./bin-debug/bootstrap.js",
+    "start": "electron ./bin/bootstrap.js",
+    "package": "npm run build && electron-forge package --platform=darwin --arch=arm64"
+  },
+  "author": "Henrik Andersen <henrik@vectorpanic.com> (http://www.vectorpanic.com)",
+  "license": "MIT",
+  "productName": "Rune OS",
+  "devDependencies": {
+    "@electron-forge/cli": "8.0.1",
+    "electron": "45.2.3",
+    "google-closure-compiler": "20221004.0.0",
+    "node": "24.22.2"
+  },
+  "config": {
+    "forge": "./forge.config.cjs"
+  }
+}

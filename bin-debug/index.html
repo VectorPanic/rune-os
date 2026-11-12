@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <title>Rune OS (bin-debug)</title>
+        <link rel="stylesheet" type="text/css" href="./../bin/style.css">
+        
+        <!-- SOURCE CODE -->
+        <script src="../src/scope/Manifest.js"></script>
+        <script src="../src/util/Validation.js"></script>
+        <script src="../src/util/Color.js"></script>
+        <script src="../src/util/Math.js"></script>
+        <script src="../src/util/DirectionalNavigation.js"></script>
+        <script src="../src/util/ViewportScroll.js"></script>
+        <script src="../src/system/config/Values.js"></script>
+        <script src="../src/system/config/Validation.js"></script>
+        <script src="../src/system/Config.js"></script>
+        <script src="../src/util/Paths.js"></script>
+        <script src="../src/util/ResourceBase.js"></script>
+        <script src="../src/text/Typography.js"></script>
+        <script src="../src/text/FontLoader.js"></script>
+        <script src="../src/text/TextScroll.js"></script>
+        <script src="../src/util/EventBindings.js"></script>
+        <script src="../src/util/FileLoader.js"></script>
+        <script src="../src/input/keyboard/KeyboardKey.js"></script>
+        <script src="../src/input/keyboard/KeyboardOptions.js"></script>
+        <script src="../src/input/keyboard/Keyboard.js"></script>
+        <script src="../src/input/gamepad/Gamepad.js"></script>
+        <script src="../src/input/gamepad/Gamepads.js"></script>
+        <script src="../src/input/Inputs.js"></script>
+        <script src="../src/input/Activity.js"></script>
+        <script src="../src/display/Canvas.js"></script>
+        <script src="../src/display/CanvasRegion.js"></script>
+        <script src="../src/display/DisplayObject.js"></script>
+        <script src="../src/display/DisplayObjectContainer.js"></script>
+        <script src="../src/display/DisplayGroup.js"></script>
+        <script src="../src/display/Stage.js"></script>
+        <script src="../src/display/Screen.js"></script>
+        <script src="../src/camera/Camera.js"></script>
+        <script src="../src/tween/transition/Linear.js"></script>
+        <script src="../src/tween/transition/Quad.js"></script>
+        <script src="../src/tween/transition/Sine.js"></script>
+        <script src="../src/tween/TweenValue.js"></script>
+        <script src="../src/tween/Tween.js"></script>
+        <script src="../src/tween/Tweens.js"></script>
+        <script src="../src/media/sound/Sound.js"></script>
+        <script src="../src/media/sound/SoundChannel.js"></script>
+        <script src="../src/media/sound/Sounds.js"></script>
+        <script src="../src/scene/Scene.js"></script>
+        <script src="../src/scene/Scenes.js"></script>
+        <script src="../src/text/TextField.js"></script>
+        <script src="../src/ui/tilemap/TilemapOptions.js"></script>
+        <script src="../src/ui/tilemap/TileLabels.js"></script>
+        <script src="../src/ui/tilemap/TileAtlas.js"></script>
+        <script src="../src/ui/tilemap/Tile.js"></script>
+        <script src="../src/ui/tilemap/TileLayout.js"></script>
+        <script src="../src/ui/tilemap/Tilemap.js"></script>
+        <script src="../src/ui/tilemap/TilemapTransitions.js"></script>
+        <script src="../src/ui/tilemap/Tilemaps.js"></script>
+        <script src="../src/ui/CategoryHeader.js"></script>
+        <script src="../src/ui/notification/Notification.js"></script>
+        <script src="../src/ui/ScreenDimmer.js"></script>
+        <script src="../src/ui/ScreenFade.js"></script>
+        <script src="../src/ui/LauncherBackground.js"></script>
+        <script src="../src/ui/HoldIndicator.js"></script>
+        <script src="../src/catalog/GameRegistry.js"></script>
+        <script src="../src/catalog/GameAvailability.js"></script>
+        <script src="../src/catalog/ScreensaverRegistry.js"></script>
+        <script src="../src/catalog/TagRegistry.js"></script>
+        <script src="../src/catalog/CategoryValidation.js"></script>
+        <script src="../src/catalog/CategoryRegistry.js"></script>
+        <script src="../src/catalog/CategoryEngine.js"></script>
+        <script src="../src/catalog/CategorySelection.js"></script>
+        <script src="../src/library/Library.js"></script>
+        <script src="../src/library/ContentInspector.js"></script>
+        <script src="../src/library/ScreensaverLibrary.js"></script>
+        <script src="../src/library/ContentFolders.js"></script>
+        <script src="../src/library/LocalLibrary.js"></script>
+        <script src="../src/launcher/GameTilePriority.js"></script>
+        <script src="../src/launcher/MatchExplanation.js"></script>
+        <script src="../src/launcher/GamePresentation.js"></script>
+        <script src="../src/launcher/CategoryTilemapManager.js"></script>
+        <script src="../src/application/ApplicationLauncher.js"></script>
+        <script src="../src/application/ScreensaverRotation.js"></script>
+        <script src="../src/launcher/LibraryRefresh.js"></script>
+        <script src="../src/launcher/LibraryStatus.js"></script>
+        <script src="../src/launcher/LauncherIdle.js"></script>
+        <script src="../src/scene/type/Launcher.js"></script>
+        <script src="../src/ui/BootLogo.js"></script>
+        <script src="../src/scene/type/Boot.js"></script>
+        <script src="../src/application/ApplicationLog.js"></script>
+        <script src="../src/application/ApplicationIdle.js"></script>
+        <script src="../src/ui/GameMessage.js"></script>
+        <script src="../src/ui/ExitHint.js"></script>
+        <script src="../src/scene/type/Application.js"></script>
+        <script src="../src/scene/type/Screensaver.js"></script>
+        <script src="../src/sync/SyncOperation.js"></script>
+        <script src="../src/sync/SyncProvider.js"></script>
+        <script src="../src/sync/ApiSyncProvider.js"></script>
+        <script src="../src/sync/LibrarySync.js"></script>
+        <script src="../src/system/Main.js"></script>
+        <script src="../src/system/Startup.js"></script>
+        <script src="../src/scope/Alias.js"></script>
+        
+        <!-- BOOTSTRAP -->
+        <script>
+            runeos.system.Startup.start().catch(function(error) {
+                console.error("Rune OS startup failed:", error);
+            });
+            
+        </script>
+    </head>
+</html>
