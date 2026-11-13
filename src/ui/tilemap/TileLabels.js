@@ -375,7 +375,8 @@ runeos.ui.tilemap.TileLabels.prototype.render = function(canvas) {
     if (this.m_disposed) return;
     this.refresh();
     this.m_renderLabelBackdrop(canvas["context"]);
-    this.m_renderBadgeBackground(canvas["context"]);
+    this.m_renderLabelBackground(canvas["context"], this.m_badgeField, this.m_config.stagePaddingPx, 1);
+    this.m_renderLabelBackground(canvas["context"], this.m_subtitleField, this.m_config.stagePaddingPx / 2, 1);
     for (var i = 0; i < this.m_fields.length; i++) canvas.renderDisplayObject(this.m_fields[i]);
 };
 
@@ -483,7 +484,7 @@ runeos.ui.tilemap.TileLabels.prototype.m_updateLayout = function(padding, width,
         this.height - this.m_config.titleBottomPaddingPx - this.m_titleField.height - footer;
     this.m_titleField.width = width;
     this.m_subtitleField.visible = this.selected && this.m_subtitleField.text.length > 0;
-    this.m_subtitleField.color = this.m_getAccentColor();
+    this.m_subtitleField.color = this.m_config.labelAccentColor;
     this.m_subtitleField.x = padding;
     this.m_subtitleField.y = this.m_titleField.y - this.m_config.labelGapPx - this.m_subtitleField.height;
     this.m_subtitleField.width = width;
@@ -513,10 +514,25 @@ runeos.ui.tilemap.TileLabels.prototype.m_updateDetails = function(step) {
     this.m_detailElapsed = this.selected ? this.m_detailElapsed + Math.max(0, step) : 0;
     var elapsed = this.m_detailElapsed - this.m_textConfig.detailDelayMs;
     var duration = this.m_textConfig.detailFadeInMs;
-    var opacity = this.selected && elapsed >= 0 ? (duration > 0 ? Math.min(1, elapsed / duration) : 1) : 0;
-    this.m_subtitleField.alpha = this.m_subtitleField["style"].alpha * opacity;
+    var opacity = this.m_getDetailOpacity(elapsed, duration);
+    var developerOpacity = this.m_getDetailOpacity(elapsed, duration * 3);
+    this.m_subtitleField.alpha = this.m_subtitleField["style"].alpha * developerOpacity;
     this.m_metadataField.alpha = this.m_metadataField["style"].alpha * opacity;
     this.m_descriptionField.alpha = this.m_descriptionField["style"].alpha * opacity;
+};
+
+/**
+ * Calculates a label fade after the shared focus delay.
+ *
+ * @param {number} elapsed Time since the focus delay elapsed.
+ * @param {number} duration Fade duration in milliseconds.
+ *
+ * @returns {number} Opacity from zero to one.
+ * @private
+ */
+runeos.ui.tilemap.TileLabels.prototype.m_getDetailOpacity = function(elapsed, duration) {
+    if (!this.selected || elapsed < 0) return 0;
+    return duration > 0 ? Math.min(1, elapsed / duration) : 1;
 };
 
 /**
@@ -557,16 +573,6 @@ runeos.ui.tilemap.TileLabels.prototype.m_updateTextContrast = function() {
 };
 
 /**
- * Chooses a readable accent for secondary labels over icons.
- *
- * @returns {string} Accent or plain-background contrast color.
- * @private
- */
-runeos.ui.tilemap.TileLabels.prototype.m_getAccentColor = function() {
-    return this.m_hasVisibleImage() ? this.m_config.labelAccentColor : this.m_titleField.color;
-};
-
-/**
  * Tests whether decoded icon pixels are currently visible.
  *
  * @returns {boolean} Whether labels are drawn over an icon.
@@ -597,21 +603,24 @@ runeos.ui.tilemap.TileLabels.prototype.m_updateTextShadows = function(enabled) {
 };
 
 /**
- * Draws a compact padded background behind the supplied badge.
+ * Draws a compact padded background following the label text and opacity.
  *
  * @param {CanvasRenderingContext2D} context Destination drawing context.
+ * @param {runeos.text.TextField} field Label receiving the shared badge styling.
+ * @param {number} padding Space around the label in pixels.
+ * @param {number} opacity Background opacity, independent of the text.
  *
  * @returns {undefined}
  * @private
  */
-runeos.ui.tilemap.TileLabels.prototype.m_renderBadgeBackground = function(context) {
-    if (!this.m_badgeField.visible) return;
-    var field = this.m_badgeField;
-    var padding = this.m_config.stagePaddingPx;
+runeos.ui.tilemap.TileLabels.prototype.m_renderLabelBackground = function(context, field, padding, opacity) {
+    if (!field.visible || field.alpha <= 0 || !field.text) return;
+    var width = Math.max(0, Math.min(Math.ceil(field["textWidth"]), field.width));
     context.save();
     try {
+        context.globalAlpha *= field.alpha * opacity;
         context.fillStyle = this.m_config.stageBackgroundColor;
-        context.fillRect(field.x - padding, field.y - padding, field.width + padding * 2, field.height + padding * 2);
+        context.fillRect(field.x - padding, field.y - padding, width + padding * 2, field.height + padding * 2);
     } finally {
         context.restore();
     }
