@@ -95,7 +95,7 @@ runeos.ui.HoldIndicator.prototype.render = function(canvas) {
     this.restore();
     if (this.m_disposed || !this.m_visible || canvas.width <= 0 || canvas.height <= 0) return;
     if (!this.m_region.capture(canvas, this.m_getBounds(canvas))) return;
-    var context = canvas.context;
+    var context = canvas["context"];
     var scale = canvas.height / runeos.display.Screen.DEFAULT_HEIGHT;
     var x = canvas.width / scale / 2;
     var y = runeos.display.Screen.DEFAULT_HEIGHT - this.m_config.marginPx - this.m_config.sizePx / 2;

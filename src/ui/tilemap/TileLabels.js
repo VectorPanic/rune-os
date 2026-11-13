@@ -374,8 +374,8 @@ runeos.ui.tilemap.TileLabels.prototype.update = function(step) {
 runeos.ui.tilemap.TileLabels.prototype.render = function(canvas) {
     if (this.m_disposed) return;
     this.refresh();
-    this.m_renderLabelBackdrop(canvas.context);
-    this.m_renderBadgeBackground(canvas.context);
+    this.m_renderLabelBackdrop(canvas["context"]);
+    this.m_renderBadgeBackground(canvas["context"]);
     for (var i = 0; i < this.m_fields.length; i++) canvas.renderDisplayObject(this.m_fields[i]);
 };
 
@@ -455,7 +455,7 @@ runeos.ui.tilemap.TileLabels.prototype.m_updateBadge = function(padding) {
     field.color = this.m_config.labelAccentColor;
     field.y = inset;
     field.x = inset;
-    field.width = Math.max(0, Math.min(Math.ceil(field.textWidth), this.width - 2 * inset));
+    field.width = Math.max(0, Math.min(Math.ceil(field["textWidth"]), this.width - 2 * inset));
 };
 
 /**
@@ -514,9 +514,9 @@ runeos.ui.tilemap.TileLabels.prototype.m_updateDetails = function(step) {
     var elapsed = this.m_detailElapsed - this.m_textConfig.detailDelayMs;
     var duration = this.m_textConfig.detailFadeInMs;
     var opacity = this.selected && elapsed >= 0 ? (duration > 0 ? Math.min(1, elapsed / duration) : 1) : 0;
-    this.m_subtitleField.alpha = this.m_subtitleField.style.alpha * opacity;
-    this.m_metadataField.alpha = this.m_metadataField.style.alpha * opacity;
-    this.m_descriptionField.alpha = this.m_descriptionField.style.alpha * opacity;
+    this.m_subtitleField.alpha = this.m_subtitleField["style"].alpha * opacity;
+    this.m_metadataField.alpha = this.m_metadataField["style"].alpha * opacity;
+    this.m_descriptionField.alpha = this.m_descriptionField["style"].alpha * opacity;
 };
 
 /**

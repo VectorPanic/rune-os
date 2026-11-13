@@ -81,7 +81,7 @@ runeos.display.CanvasRegion.prototype.capture = function(canvas, bounds) {
     var height = Math.min(canvas.height, Math.ceil(bounds.y + bounds.height)) - y;
     if (width <= 0 || height <= 0) return false;
     try {
-        var pixels = canvas.context.getImageData(x, y, width, height);
+        var pixels = canvas["context"].getImageData(x, y, width, height);
         this.m_saved = {
             canvas: canvas,
             width: canvas.width,

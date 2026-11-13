@@ -149,7 +149,7 @@ runeos.scene.Scenes.prototype.swap = function(scene) {
  */
 runeos.scene.Scenes.prototype.update = function(step) {
     var scene = this.m_scene;
-    if (scene && !scene.disposed && typeof scene.update === "function") scene.update(step);
+    if (scene && !scene["disposed"] && typeof scene.update === "function") scene.update(step);
 };
 
 //------------------------------------------------------------------------------

@@ -161,6 +161,6 @@ runeos.display.DisplayObjectContainer.prototype.dispose = function() {
  */
 runeos.display.DisplayObjectContainer.prototype.m_renderChildren = function() {
     for (var i = 0; i < this.m_children.length; i++) {
-        this.canvas.renderDisplayObject(this.m_children[i]);
+        this["canvas"].renderDisplayObject(this.m_children[i]);
     }
 };

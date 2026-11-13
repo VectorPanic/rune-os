@@ -75,7 +75,7 @@ runeos.launcher.CategoryTilemapManager = function(tilemaps, options) {
      * @type {runeos.ui.tilemap.TilemapOptions}
      * @private
      */
-    this.m_options = runeos.ui.tilemap.TilemapOptions.resolve(options, "tiles", tilemaps.settings);
+    this.m_options = runeos.ui.tilemap.TilemapOptions.resolve(options, "tiles", tilemaps["settings"]);
 
     /**
      * Immutable tiles settings used by this component.
@@ -210,7 +210,7 @@ runeos.launcher.CategoryTilemapManager.prototype.refresh = function() {
     if (this.m_disposed) return;
     var viewport = this.tilemaps;
     var existing = Object.create(null);
-    viewport.tilemaps.forEach(function(map) {
+    viewport["tilemaps"].forEach(function(map) {
         existing[map.id] = map;
     });
     var self = this;
@@ -296,7 +296,7 @@ runeos.launcher.CategoryTilemapManager.prototype.m_updateMap = function(map, gro
     map.description = category.description || "";
     map.columns = category.columns === undefined ? this.m_config.columns : category.columns;
     var previous = Object.create(null);
-    for (var i = 0; i < map.length; i++) {
+    for (var i = 0; i < map["length"]; i++) {
         var tile = map.getTileAt(i);
         previous[tile.gameId] = tile;
     }

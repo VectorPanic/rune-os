@@ -124,7 +124,7 @@ runeos.ui.LauncherBackground.prototype.update = function(step) {
  */
 runeos.ui.LauncherBackground.prototype.renderTo = function(canvas, offsetX, offsetY) {
     if (this.m_disposed || !this.m_config.enabled || !this.visible || this.alpha <= 0 || this.m_config.fieldOpacity <= 0) return;
-    var context = canvas.context;
+    var context = canvas["context"];
     context.save();
     try {
         context.translate(this.x + (offsetX || 0), this.y + (offsetY || 0));

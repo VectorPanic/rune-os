@@ -175,7 +175,7 @@ runeos.ui.ScreenFade.prototype.m_drawCover = function(canvas) {
         width: canvas.width,
         height: canvas.height
     })) {
-        var context = canvas.context;
+        var context = canvas["context"];
         context.save();
         try {
             context.setTransform(1, 0, 0, 1, 0, 0);

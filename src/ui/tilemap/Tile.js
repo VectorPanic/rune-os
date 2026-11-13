@@ -285,7 +285,7 @@ Object.defineProperty(runeos.ui.tilemap.Tile.prototype, "nameField", {
      * @ignore
      */
     get : function() {
-        return this.m_labels.nameField;
+        return this.m_labels["nameField"];
     }
 });
 
@@ -304,7 +304,7 @@ Object.defineProperty(runeos.ui.tilemap.Tile.prototype, "metadataField", {
      * @ignore
      */
     get : function() {
-        return this.m_labels.metadataField;
+        return this.m_labels["metadataField"];
     }
 });
 
@@ -323,7 +323,7 @@ Object.defineProperty(runeos.ui.tilemap.Tile.prototype, "studioField", {
      * @ignore
      */
     get : function() {
-        return this.m_labels.studioField;
+        return this.m_labels["studioField"];
     }
 });
 
@@ -342,7 +342,7 @@ Object.defineProperty(runeos.ui.tilemap.Tile.prototype, "reasonField", {
      * @ignore
      */
     get : function() {
-        return this.m_labels.reasonField;
+        return this.m_labels["reasonField"];
     }
 });
 
@@ -427,7 +427,7 @@ Object.defineProperty(runeos.ui.tilemap.Tile.prototype, "imageStatus", {
      * @ignore
      */
     get : function() {
-        return this.m_atlas.status;
+        return this.m_atlas["status"];
     }
 });
 
@@ -465,9 +465,9 @@ runeos.ui.tilemap.Tile.prototype.render = function() {
     this.m_syncLabels();
     runeos.display.DisplayObject.prototype.render.call(this);
     this.m_renderAtlas();
-    this.m_labels.render(this.canvas);
+    this.m_labels.render(this["canvas"]);
     this.m_renderChildren();
-    var context = this.canvas.context;
+    var context = this["canvas"].context;
     context.save();
     try {
         if (this.selected && this.m_config.borderWidthPx > 0) {
@@ -570,7 +570,7 @@ runeos.ui.tilemap.Tile.prototype.m_syncLabels = function() {
     labels.width = this.width;
     labels.height = this.height;
     labels.backgroundColor = this.backgroundColor;
-    labels.imageOpacity = this.m_atlas.opacity;
+    labels.imageOpacity = this.m_atlas["opacity"];
 };
 
 /**
@@ -587,7 +587,7 @@ runeos.ui.tilemap.Tile.prototype.m_renderAtlas = function() {
     atlas.height = this.height;
     atlas.variant = this.variant;
     atlas.normalIcon = this.normalIcon;
-    atlas.render(this.canvas.context);
+    atlas.render(this["canvas"].context);
 };
 
 /**

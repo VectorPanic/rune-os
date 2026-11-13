@@ -363,7 +363,7 @@ Object.defineProperty(runeos.ui.tilemap.Tilemaps.prototype, "navigableCount", {
     get : function() {
         var count = 0;
         for (var i = 0; i < this.m_maps.length; i++) {
-            if (this.m_maps[i].length > 0) count++;
+            if (this.m_maps[i]["length"] > 0) count++;
         }
         return count;
     }
@@ -384,11 +384,11 @@ Object.defineProperty(runeos.ui.tilemap.Tilemaps.prototype, "navigableIndex", {
      * @ignore
      */
     get : function() {
-        var active = this.selected;
+        var active = this["selected"];
         if (!active || active.length === 0) return -1;
         var index = 0;
         for (var i = 0; i < this.m_index; i++) {
-            if (this.m_maps[i].length > 0) index++;
+            if (this.m_maps[i]["length"] > 0) index++;
         }
         return index;
     }
@@ -453,7 +453,7 @@ runeos.ui.tilemap.Tilemaps.prototype.setTilemaps = function(maps) {
         if (this.m_maps[i] !== map) changed = true;
     }
     if (!changed) return false;
-    var active = this.selected;
+    var active = this["selected"];
     var previous = this.m_maps;
     for (var old = 0; old < previous.length; old++) {
         if (maps.indexOf(previous[old]) === -1) this.m_disposeTilemap(previous[old]);
@@ -511,7 +511,7 @@ runeos.ui.tilemap.Tilemaps.prototype.select = function(tilemap, animate, reason)
 runeos.ui.tilemap.Tilemaps.prototype.navigate = function(direction) {
     if (this.m_disposed) return false;
     if (!runeos.util.DirectionalNavigation.isDirection(direction)) return false;
-    var map = this.selected;
+    var map = this["selected"];
     if (!map) return false;
     var next = map.neighbor(direction);
     if (next) {
@@ -522,10 +522,10 @@ runeos.ui.tilemap.Tilemaps.prototype.navigate = function(direction) {
     if (direction !== "LEFT" && direction !== "RIGHT") return false;
     var sign = direction === "RIGHT" ? 1 : -1;
     var index = this.m_index + sign;
-    while (index >= 0 && index < this.m_maps.length && this.m_maps[index].length === 0) index += sign;
+    while (index >= 0 && index < this.m_maps.length && this.m_maps[index]["length"] === 0) index += sign;
     if (index < 0 || index >= this.m_maps.length) return false;
     var destination = this.m_maps[index];
-    if (!destination.m_hasBeenActive || !destination.selected) {
+    if (!destination.m_hasBeenActive || !destination["selected"]) {
         var entry = destination.findEntry(direction, map.selected);
         if (!entry) return false;
         destination.select(entry, false);
@@ -545,7 +545,7 @@ runeos.ui.tilemap.Tilemaps.prototype.navigate = function(direction) {
 runeos.ui.tilemap.Tilemaps.prototype.refresh = function(animate, reason) {
     if (this.m_disposed) return;
     this.m_selectAvailableMap();
-    var active = this.selected;
+    var active = this["selected"];
     if (!active) {
         this.m_updateSelection(reason);
         return;
@@ -600,7 +600,7 @@ runeos.ui.tilemap.Tilemaps.prototype.clear = function() {
 runeos.ui.tilemap.Tilemaps.prototype.render = function() {
     if (this.m_disposed) return;
     runeos.display.DisplayObject.prototype.render.call(this);
-    var active = this.selected;
+    var active = this["selected"];
     for (var i = 0; i < this.m_maps.length; i++) {
         if (this.m_maps[i] !== active) this.m_renderTilemap(this.m_maps[i]);
     }
@@ -685,7 +685,7 @@ runeos.ui.tilemap.Tilemaps.prototype.m_clearContent = function() {
  * @private
  */
 runeos.ui.tilemap.Tilemaps.prototype.m_refreshSelection = function() {
-    var map = this.selected;
+    var map = this["selected"];
     var tile = map ? map.selected : null;
     if (this.m_selection.tilemap !== map || this.m_selection.tile !== tile) {
         this.m_selection = Object.freeze({
@@ -723,17 +723,17 @@ runeos.ui.tilemap.Tilemaps.prototype.m_notifySelection = function(reason) {
  * @private
  */
 runeos.ui.tilemap.Tilemaps.prototype.m_selectAvailableMap = function() {
-    var active = this.selected;
+    var active = this["selected"];
     if (active && active.length > 0) return;
     var start = Math.max(0, this.m_index);
     for (var next = start; next < this.m_maps.length; next++) {
-        if (this.m_maps[next].length > 0) {
+        if (this.m_maps[next]["length"] > 0) {
             this.m_index = next;
             return;
         }
     }
     for (var previous = start - 1; previous >= 0; previous--) {
-        if (this.m_maps[previous].length > 0) {
+        if (this.m_maps[previous]["length"] > 0) {
             this.m_index = previous;
             return;
         }
@@ -751,7 +751,7 @@ runeos.ui.tilemap.Tilemaps.prototype.m_selectAvailableMap = function() {
  * @private
  */
 runeos.ui.tilemap.Tilemaps.prototype.m_renderTilemap = function(map) {
-    map.renderTo(this.canvas, 0, 0, this.m_tilemapRenderer);
+    map.renderTo(this["canvas"], 0, 0, this.m_tilemapRenderer);
 };
 
 /**
@@ -766,15 +766,15 @@ runeos.ui.tilemap.Tilemaps.prototype.m_renderTilemap = function(map) {
  * @private
  */
 runeos.ui.tilemap.Tilemaps.prototype.m_renderTilemapContents = function(map, canvas, x, y) {
-    var tile = map.selected;
-    for (var i = 0; i < map.length; i++) {
+    var tile = map["selected"];
+    for (var i = 0; i < map["length"]; i++) {
         var child = map.getTileAt(i);
         if (child !== tile) canvas.renderDisplayObject(child, x, y);
     }
     if (!tile) return;
     if (tile.selected && tile.visible && tile.alpha > 0) {
         var bounds = tile.getRenderBounds(this.m_shadowBounds, x, y);
-        var context = canvas.context;
+        var context = canvas["context"];
         context.save();
         try {
             context.globalAlpha *= tile.alpha * this.m_tileConfig.shadowOpacity;
@@ -802,18 +802,18 @@ runeos.ui.tilemap.Tilemaps.prototype.m_getMapPositions = function(active) {
     offsets[this.m_index] = center;
     var cursor = center;
     for (var left = this.m_index - 1; left >= 0; left--) {
-        if (this.m_maps[left].length === 0) continue;
+        if (this.m_maps[left]["length"] === 0) continue;
         cursor -= this.gap + this.m_maps[left].width;
         offsets[left] = cursor;
     }
     cursor = center + active.width;
     for (var right = this.m_index + 1; right < this.m_maps.length; right++) {
-        if (this.m_maps[right].length === 0) continue;
+        if (this.m_maps[right]["length"] === 0) continue;
         offsets[right] = cursor + this.gap;
         cursor = offsets[right] + this.m_maps[right].width;
     }
     return this.m_maps.map(function(map, index) {
-        if (map.length === 0) return null;
+        if (map["length"] === 0) return null;
         return {
             x: offsets[index],
             y: this.m_getMapY(map),
@@ -848,8 +848,8 @@ runeos.ui.tilemap.Tilemaps.prototype.m_showMaps = function(positions, animate) {
  */
 runeos.ui.tilemap.Tilemaps.prototype.m_getMapY = function(map) {
     var y = Math.min(this.contentTop, map.y);
-    if (map !== this.selected) return y;
-    var tile = map.selected;
+    if (map !== this["selected"]) return y;
+    var tile = map["selected"];
     if (!tile) return y;
     this.m_scrollViewport.start = this.contentTop;
     this.m_scrollViewport.end = this.height;
@@ -883,8 +883,8 @@ runeos.ui.tilemap.Tilemaps.prototype.m_updateSelection = function(reason) {
     for (var m = 0; m < this.m_maps.length; m++) {
         var map = this.m_maps[m];
         var active = m === this.m_index;
-        var selectedTile = map.selected;
-        for (var t = 0; t < map.length; t++) {
+        var selectedTile = map["selected"];
+        for (var t = 0; t < map["length"]; t++) {
             var child = map.getTileAt(t);
             var selected = active && child === selectedTile;
             this.m_transitions.selectTile(child, selected, active);
@@ -903,7 +903,7 @@ runeos.ui.tilemap.Tilemaps.prototype.m_updateSelection = function(reason) {
  */
 runeos.ui.tilemap.Tilemaps.prototype.m_disposeTilemap = function(map) {
     this.cancelTransition(map);
-    for (var i = 0; i < map.length; i++) this.cancelTransition(map.getTileAt(i));
+    for (var i = 0; i < map["length"]; i++) this.cancelTransition(map.getTileAt(i));
     this.removeChild(map);
     map.m_owner = null;
     map.dispose();

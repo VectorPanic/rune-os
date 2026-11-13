@@ -380,7 +380,7 @@ runeos.input.Keyboard.prototype.m_constructKey = function(keyName, keyCode) {
  * @private
  */
 runeos.input.Keyboard.prototype.m_constructEvent = function() {
-    if (this.m_events.length > 0) return;
+    if (this.m_events["length"] > 0) return;
     var keyboard = this;
     this.m_events.add(this.m_options.target, "keydown", function(event) {
         if (event.keyCode === 116) event.preventDefault();

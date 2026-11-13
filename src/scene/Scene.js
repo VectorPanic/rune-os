@@ -123,7 +123,7 @@ Object.defineProperty(runeos.scene.Scene.prototype, "sounds", {
      * @ignore
      */
     get : function() {
-        return runeos.instance.sounds;
+        return runeos.instance["sounds"];
     }
 });
 
@@ -142,7 +142,7 @@ Object.defineProperty(runeos.scene.Scene.prototype, "gamepads", {
      * @ignore
      */
     get : function() {
-        return runeos.instance.inputs.gamepads;
+        return runeos.instance.inputs["gamepads"];
     }
 });
 

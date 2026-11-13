@@ -129,7 +129,7 @@ runeos.application.ApplicationIdle.prototype.update = function(step) {
     this.m_activity.update(step);
     this.m_updateWarning(step);
 
-    return this.expired;
+    return this["expired"];
 };
 
 /**
@@ -156,7 +156,7 @@ runeos.application.ApplicationIdle.prototype.dispose = function() {
  * @private
  */
 runeos.application.ApplicationIdle.prototype.m_updateWarning = function(step) {
-    if (this.m_activity.active || !this.m_activity.focused) {
+    if (this.m_activity.active || !this.m_activity["focused"]) {
         this.m_warningElapsed = null;
     } else if (this.m_warningElapsed === null) {
         if (this.m_activity.elapsed >= this.m_config.delayMs) this.m_warningElapsed = 0;

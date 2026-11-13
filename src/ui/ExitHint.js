@@ -97,7 +97,7 @@ runeos.ui.ExitHint.prototype.restore = function() {
  * @returns {undefined}
  */
 runeos.ui.ExitHint.prototype.update = function(step, dismiss) {
-    if (!this.m_message || !this.m_message.visible) return;
+    if (!this.m_message || !this.m_message["visible"]) return;
     var config = this.m_config;
     if (typeof step === "number" && isFinite(step)) this.m_elapsed += Math.max(0, step);
     if (this.m_elapsed >= config.fadeInMs + config.exitHintHoldMs + config.fadeOutMs || dismiss) {

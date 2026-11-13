@@ -306,7 +306,7 @@ Object.defineProperty(runeos.scene.Application.prototype, "loadingStage", {
      */
     get : function() {
         var indicator = this.m_returnScene && this.m_returnScene.launchIndicator;
-        return !this.m_finished && !this.m_app && indicator && indicator.visible ? this.m_returnScene.stage : null;
+        return !this.m_finished && !this.m_app && indicator && indicator.visible ? this.m_returnScene["stage"] : null;
     }
 });
 
@@ -636,7 +636,7 @@ runeos.scene.Application.prototype.m_updateIdle = function(step) {
         this.exit();
         return true;
     }
-    var remaining = this.m_idle.remaining;
+    var remaining = this.m_idle["remaining"];
     if (!remaining) {
         if (this.m_idleMessage) this.m_idleMessage.dispose();
         this.m_idleMessage = null;
@@ -677,7 +677,7 @@ runeos.scene.Application.prototype.m_fetchSourceCode = function() {
             if (scene.m_isActive()) scene.m_fail(error);
         });
         // open/send failures can complete synchronously before text() returns.
-        if (!this.m_finished && this.m_files.length > 0) this.m_request = request;
+        if (!this.m_finished && this.m_files["length"] > 0) this.m_request = request;
     } catch (error) {
         this.m_request = null;
         this.m_fail(error);

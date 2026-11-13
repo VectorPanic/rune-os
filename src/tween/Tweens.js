@@ -113,7 +113,7 @@ runeos.tween.Tweens.prototype.create = function(options) {
 runeos.tween.Tweens.prototype.replace = function(options) {
     if (this.m_disposed) throw new Error("Tweens is disposed.");
     var tween = new runeos.tween.Tween(options);
-    this.removeFrom(tween.target);
+    this.removeFrom(tween["target"]);
     return this.m_addTween(tween);
 };
 

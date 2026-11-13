@@ -292,7 +292,7 @@ runeos.media.SoundChannel.prototype.get = function(name, unique) {
     unique = !this.m_shared && unique === true;
     if (!unique) {
         for (var i = 0; i < this.m_sounds.length; i++) {
-            if (this.m_sounds[i].name === name && !this.m_sounds[i].unique) return this.m_sounds[i];
+            if (this.m_sounds[i]["name"] === name && !this.m_sounds[i]["unique"]) return this.m_sounds[i];
         }
     }
     var sound = new runeos.media.Sound(this, name, unique);
@@ -411,7 +411,7 @@ runeos.media.SoundChannel.prototype.m_getOutput = function() {
         var context = this.m_owner.m_getContext();
         var gain = context.createGain();
         try {
-            gain.connect(this === this.m_owner.master ? context.destination : this.m_owner.master.m_getOutput());
+            gain.connect(this === this.m_owner["master"] ? context.destination : this.m_owner["master"].m_getOutput());
         } catch (error) {
             gain.disconnect();
             throw error;
@@ -462,6 +462,6 @@ runeos.media.SoundChannel.prototype.m_updateRates = function() {
  */
 runeos.media.SoundChannel.prototype.m_removeResource = function(name) {
     for (var i = this.m_sounds.length - 1; i >= 0; i--) {
-        if (this.m_sounds[i].name === name) this.remove(this.m_sounds[i]);
+        if (this.m_sounds[i]["name"] === name) this.remove(this.m_sounds[i]);
     }
 };

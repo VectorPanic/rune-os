@@ -174,7 +174,7 @@ runeos.ui.BootLogo.prototype.render = function() {
     if (this.m_disposed) return;
     runeos.display.DisplayObject.prototype.render.call(this);
     if (this.loaded && this.m_image.naturalWidth > 0) {
-        this.canvas.context.drawImage(this.m_image, 0, 0, this.width, this.height);
+        this["canvas"].context.drawImage(this.m_image, 0, 0, this.width, this.height);
     }
 };
 

@@ -229,7 +229,7 @@ runeos.ui.Notification.prototype.setViewport = function(width, height, canvas) {
  */
 runeos.ui.Notification.prototype.drawTo = function(canvas) {
     if (this.m_disposed || !this.visible || this.alpha <= 0) return;
-    var context = canvas.context;
+    var context = canvas["context"];
     context.save();
     try {
         context.globalAlpha *= this.alpha;
@@ -319,7 +319,7 @@ runeos.ui.Notification.prototype.m_construct = function() {
 runeos.ui.Notification.prototype.m_updateLayout = function(canvas) {
     var padding = this.m_config.paddingPx;
     var margin = this.m_config.marginPx;
-    var textWidth = canvas ? this.m_textField.measure(canvas) : this.m_textField.textWidth;
+    var textWidth = canvas ? this.m_textField.measure(canvas) : this.m_textField["textWidth"];
     this.width = Math.max(0, Math.min(this.m_config.maxWidthPx, this.m_viewport.width - margin * 2,
         Math.ceil(textWidth) + padding * 2));
     this.height = this.m_textField.height + padding * 2;

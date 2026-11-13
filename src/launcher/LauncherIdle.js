@@ -204,13 +204,13 @@ runeos.launcher.LauncherIdle.prototype.recheckScreensavers = function() {
 runeos.launcher.LauncherIdle.prototype.update = function(step, inputs) {
     if (this.m_disposed || !this.m_enabled) return false;
     this.m_activity.update(step, inputs);
-    if (this.m_activity.active || !this.m_activity.focused) {
+    if (this.m_activity.active || !this.m_activity["focused"]) {
         var cancelled = this.m_launcher.cancelAutomatic();
         this.reset();
         return cancelled;
     }
     if (this.m_launcher.busy) {
-        if (!this.m_launcher.automatic) this.reset();
+        if (!this.m_launcher["automatic"]) this.reset();
         return false;
     }
     this.m_updateDimming();

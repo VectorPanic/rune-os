@@ -247,7 +247,7 @@ Object.defineProperty(runeos.text.TextField.prototype, "scrollOffset", {
      * @ignore
      */
     get : function() {
-        return this.m_scroll.offset;
+        return this.m_scroll["offset"];
     }
 });
 
@@ -263,7 +263,7 @@ Object.defineProperty(runeos.text.TextField.prototype, "scrollOffset", {
  * @returns {number} Natural text width in logical pixels.
  */
 runeos.text.TextField.prototype.measure = function(canvas) {
-    this.m_updateMetrics(canvas.context);
+    this.m_updateMetrics(canvas["context"]);
     return this.m_textWidth;
 };
 
@@ -279,8 +279,8 @@ runeos.text.TextField.prototype.measure = function(canvas) {
  */
 runeos.text.TextField.prototype.drawTo = function(canvas, offsetX, offsetY) {
     if (!this.visible || this.alpha <= 0 || this.width <= 0 || this.height <= 0) return;
-    this.m_updateMetrics(canvas.context);
-    var context = canvas.context;
+    this.m_updateMetrics(canvas["context"]);
+    var context = canvas["context"];
     context.save();
     try {
         context.translate(this.x + (offsetX || 0), this.y + (offsetY || 0));
@@ -336,7 +336,7 @@ runeos.text.TextField.prototype.restartScroll = function() {
 runeos.text.TextField.prototype.render = function() {
     this.m_updateMetrics();
     runeos.display.DisplayObject.prototype.render.call(this);
-    this.m_renderText(this.canvas.context);
+    this.m_renderText(this["canvas"].context);
 };
 
 //------------------------------------------------------------------------------
@@ -365,9 +365,9 @@ runeos.text.TextField.prototype.m_renderText = function(context) {
         context.fillText(/**
              * Measurement populated this cache before painting.
              * @type {string}
-             */ (this.m_lastText), -this.m_scroll.offset, this.height / 2);
+             */ (this.m_lastText), -this.m_scroll["offset"], this.height / 2);
         if (this.m_textWidth > this.width) {
-            var next = this.m_textWidth + this.m_getScrollGap() - this.m_scroll.offset;
+            var next = this.m_textWidth + this.m_getScrollGap() - this.m_scroll["offset"];
             if (next < this.width) {
                 context.fillText(/**
              * Measurement populated this cache before painting.
@@ -392,7 +392,7 @@ runeos.text.TextField.prototype.m_renderText = function(context) {
 runeos.text.TextField.prototype.m_updateMetrics = function(context) {
     var text = this.text === null || this.text === undefined ? "" : String(this.text);
     if (text !== this.m_lastText || this.font !== this.m_lastFont) {
-        context = context || this.canvas.context;
+        context = context || this["canvas"].context;
         context.save();
         try {
             context.font = this.font;

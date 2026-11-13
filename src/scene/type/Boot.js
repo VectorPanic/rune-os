@@ -211,7 +211,7 @@ runeos.scene.Boot.prototype.update = function(step) {
     if (this.m_hold < this.m_config.holdMs || !this.m_ready) return;
     this.m_phase = "fadeOut";
     var scene = this;
-    this.tweens.create({
+    this["tweens"].create({
         target: this.m_logo,
         args: {alpha: 0},
         duration: this.m_config.fadeOutMs,
@@ -289,7 +289,7 @@ runeos.scene.Boot.prototype.m_loadSound = function() {
     if (sounds && this.m_audioConfig.boot.enabled) {
         sounds.load("runeos_sound_boot", this.m_audioConfig.boot.url).then(function() {
             if (scene.m_disposed) return;
-            scene.m_bootSound = sounds.sound.get("runeos_sound_boot");
+            scene.m_bootSound = sounds["sound"].get("runeos_sound_boot");
             scene.m_bootSound.volume = scene.m_audioConfig.boot.volume;
             scene.m_playBootSound();
         }).catch(function(error) {
@@ -340,7 +340,7 @@ runeos.scene.Boot.prototype.m_fadeIn = function() {
     var scene = this;
     scene.m_phase = "fadeIn";
     scene.m_playBootSound();
-    scene.tweens.create({
+    scene["tweens"].create({
         target: scene.m_logo,
         args: {alpha: 1},
         duration: scene.m_config.fadeInMs,
@@ -359,7 +359,7 @@ runeos.scene.Boot.prototype.m_fadeIn = function() {
  * @private
  */
 runeos.scene.Boot.prototype.m_playBootSound = function() {
-    if (this.m_disposed || this.m_soundPlayed || !this.m_bootSound || !this.m_logo.loaded ||
+    if (this.m_disposed || this.m_soundPlayed || !this.m_bootSound || !this.m_logo["loaded"] ||
         (this.m_phase !== "fadeIn" && this.m_phase !== "hold")) return;
     this.m_soundPlayed = true;
     this.m_bootSound.play(true);
@@ -372,10 +372,10 @@ runeos.scene.Boot.prototype.m_playBootSound = function() {
  * @private
  */
 runeos.scene.Boot.prototype.m_constructLogo = function() {
-    this.stage.backgroundColor = this.m_config.backgroundColor;
+    this["stage"].backgroundColor = this.m_config.backgroundColor;
     this.m_logo = new runeos.ui.BootLogo(this.m_config, {
         width: runeos.display.Screen.DEFAULT_WIDTH,
         height: runeos.display.Screen.DEFAULT_HEIGHT
     });
-    this.stage.addChild(this.m_logo);
+    this["stage"].addChild(this.m_logo);
 };

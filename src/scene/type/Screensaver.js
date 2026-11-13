@@ -360,7 +360,7 @@ runeos.scene.Screensaver.prototype.m_renderCredits = function(canvas) {
         height: note.height * scale + 2
     };
     if (!this.m_creditsRegion.capture(canvas, bounds)) return;
-    var context = canvas.context;
+    var context = canvas["context"];
     context.save();
     try {
         context.setTransform(scale, 0, 0, scale, 0, 0);

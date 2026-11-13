@@ -401,7 +401,7 @@ Object.defineProperty(runeos.scene.Launcher.prototype, "launchIndicator", {
      * @ignore
      */
     get : function() {
-        return this.m_launcher.request && !this.m_launcher.automatic ? this.m_notification : null;
+        return this.m_launcher.request && !this.m_launcher["automatic"] ? this.m_notification : null;
     }
 });
 
@@ -420,7 +420,7 @@ Object.defineProperty(runeos.scene.Launcher.prototype, "syncAllowed", {
      * @ignore
      */
     get : function() {
-        return !this.m_disposed && !this.m_leaving && !this.m_refreshing && !this.m_launcher.busy;
+        return !this.m_disposed && !this.m_leaving && !this.m_refreshing && !this.m_launcher["busy"];
     }
 });
 
@@ -458,7 +458,7 @@ Object.defineProperty(runeos.scene.Launcher.prototype, "activity", {
      * @ignore
      */
     get : function() {
-        return this.m_idle.activity;
+        return this.m_idle["activity"];
     }
 });
 
@@ -518,7 +518,7 @@ runeos.scene.Launcher.prototype.launchSelected = function() {
     if (runeos.instance && runeos.instance.screenFade && runeos.instance.screenFade.active) return false;
     if (this.m_refreshing) return false;
     if (runeos.instance && runeos.instance.librarySync && runeos.instance.librarySync.publishing) return false;
-    var tile = this.m_tilemaps.selection.tile;
+    var tile = this.m_tilemaps["selection"].tile;
     if (!tile) return false;
     return this.m_launcher.launch({
         source: tile.source,
@@ -544,7 +544,7 @@ runeos.scene.Launcher.prototype.init = function(previousScene) {
     this.m_background.start();
     this.m_launcher.resume();
     if (this.m_notification) this.m_notification.hide();
-    if (previousScene instanceof runeos.scene.Application) this.m_stopSoundPending = !(previousScene instanceof runeos.scene.Screensaver);
+    if (previousScene instanceof runeos.scene.Application) this.m_stopSoundPending = true;
     this.m_constructSounds();
     this.m_loadCatalog();
     if (this.m_libraryRefresh.watching && (previousScene instanceof runeos.scene.Application)) this.m_refreshLibrary(false);
@@ -573,20 +573,20 @@ runeos.scene.Launcher.prototype.update = function(step) {
         this.m_stopSoundPending = false;
         this.m_stopSound.play(true);
     }
-    var gamepads = this.gamepads;
-    if (this.keyboard.justPressed("F5") || (gamepads && gamepads.justHeld &&
+    var gamepads = this["gamepads"];
+    if (this["keyboard"].justPressed("F5") || (gamepads && gamepads.justHeld &&
         gamepads.justHeld(runeos.input.Gamepad.SELECT, this.m_config.refreshHoldMs, step))) {
         this.m_refreshLibrary(true);
         return;
     }
-    if (this.keyboard.justPressed("ENTER") || (gamepads &&
+    if (this["keyboard"].justPressed("ENTER") || (gamepads &&
         (gamepads.justPressed(runeos.input.Gamepad.A) || gamepads.justPressed(runeos.input.Gamepad.START)))) {
         this.launchSelected();
         return;
     }
     var directions = runeos.input.Gamepad.DIRECTIONS;
     for (var i = 0; i < directions.length; i++) {
-        if (this.keyboard.justPressed(directions[i]) ||
+        if (this["keyboard"].justPressed(directions[i]) ||
             (gamepads && gamepads.directionJustPressed(directions[i]))) {
             this.m_tilemaps.navigate(directions[i]);
             break;
@@ -722,7 +722,7 @@ runeos.scene.Launcher.prototype.m_loadLegacyCatalog = function() {
 runeos.scene.Launcher.prototype.m_prepareLeave = function() {
     this.m_background.stop();
     this.m_idle.stop();
-    var automatic = this.m_launcher.automatic;
+    var automatic = this.m_launcher["automatic"];
     this.m_launcher.suspend();
     return automatic;
 };
@@ -773,13 +773,13 @@ runeos.scene.Launcher.prototype.m_leaveWithFade = function(onStopped) {
  * @private
  */
 runeos.scene.Launcher.prototype.m_fadeOut = function() {
-    this.tweens.replace({
+    this["tweens"].replace({
         target: this.m_categoryHeader,
         args: {alpha: 0},
         duration: this.m_config.menuFadeOutMs,
         transition: runeos.tween.Quad.easeIn
     });
-    this.tweens.replace({
+    this["tweens"].replace({
         target: this.m_tilemaps,
         args: {
             alpha: 0,
@@ -801,7 +801,7 @@ runeos.scene.Launcher.prototype.m_fadeOut = function() {
 runeos.scene.Launcher.prototype.m_leaveDuration = function() {
     if (!this.m_launchSoundPlayed || !this.m_startSound) return this.m_config.fadeOutMs;
     return Math.max(this.m_config.launchFadeMinMs, Math.min(this.m_config.launchFadeMaxMs,
-        this.m_startSound.duration * 1000 + this.m_config.launchSoundMarginMs));
+        this.m_startSound["duration"] * 1000 + this.m_config.launchSoundMarginMs));
 };
 
 /**
@@ -907,12 +907,12 @@ runeos.scene.Launcher.prototype.m_updateSyncMessage = function() {
     var sync = runeos.instance && runeos.instance.librarySync;
     var status = this.m_libraryStatus.manual(sync, runeos.system.Config.getGroup("notifications"));
     this.m_manualSync = status.pending;
-    var empty = this.m_catalogReady && this.catalog && this.m_tilemaps.navigableCount === 0;
+    var empty = this.m_catalogReady && this.catalog && this.m_tilemaps["navigableCount"] === 0;
     if (!status.message || (!status.pending && empty)) {
         if (this.m_notification) this.m_notification.hide();
         return;
     }
-    if (!status.pending || !this.m_notification || !this.m_notification.visible || this.m_notification.message !== status.message) {
+    if (!status.pending || !this.m_notification || !this.m_notification.visible || this.m_notification["message"] !== status["message"]) {
         this.m_showMessage(status.message, {persistent: status.persistent});
     }
 };
@@ -968,7 +968,7 @@ runeos.scene.Launcher.prototype.m_constructSounds = function() {
         if (!config.enabled && !(resource.key === "selection" && scene.m_audioConfig.categoryChange.enabled)) return;
         sounds.load(resource.name, config.url).then(function() {
             if (scene.m_disposed) return;
-            var sound = sounds.sound.get(resource.name);
+            var sound = sounds["sound"].get(resource.name);
             sound.preservesPitch = resource.preservesPitch;
             sound.volume = config.volume;
             scene[resource.field] = sound;
@@ -1008,7 +1008,7 @@ runeos.scene.Launcher.prototype.m_enter = function() {
     this.m_tilemaps.alpha = 0;
     this.m_tilemaps.y = this.m_config.enterOffsetYPx;
     this.m_categoryHeader.alpha = 0;
-    this.tweens.replace({
+    this["tweens"].replace({
         target: this.m_tilemaps,
         args: {
             alpha: 1,
@@ -1017,7 +1017,7 @@ runeos.scene.Launcher.prototype.m_enter = function() {
         duration: this.m_config.fadeInMs,
         transition: runeos.tween.Quad.easeOut
     });
-    this.tweens.replace({
+    this["tweens"].replace({
         target: this.m_categoryHeader,
         args: {alpha: 1},
         duration: this.m_config.menuFadeInMs,
@@ -1030,8 +1030,8 @@ runeos.scene.Launcher.prototype.m_enter = function() {
         );
         this.m_startupOverlay = overlay;
         overlay.backgroundColor = runeos.system.Config.getGroup("boot").backgroundColor;
-        this.stage.addChild(overlay);
-        this.tweens.create({
+        this["stage"].addChild(overlay);
+        this["tweens"].create({
             target: overlay,
             args: {alpha: 0},
             duration: this.m_config.startupFadeMs,
@@ -1050,8 +1050,8 @@ runeos.scene.Launcher.prototype.m_enter = function() {
  */
 runeos.scene.Launcher.prototype.m_clearStartupOverlay = function() {
     if (!this.m_startupOverlay) return;
-    this.tweens.removeFrom(this.m_startupOverlay);
-    this.stage.removeChild(this.m_startupOverlay);
+    this["tweens"].removeFrom(this.m_startupOverlay);
+    this["stage"].removeChild(this.m_startupOverlay);
     this.m_startupOverlay.dispose();
     this.m_startupOverlay = null;
 };
@@ -1084,13 +1084,13 @@ runeos.scene.Launcher.prototype.m_constructEmptyNotification = function() {
         textConfig: this.m_textConfig,
         config: {maxWidthPx: this.m_tilemaps.width}
     });
-    this.stage.addChild(this.m_emptyNotification);
+    this["stage"].addChild(this.m_emptyNotification);
     if (this.m_notification) {
-        this.stage.removeChild(this.m_notification);
-        this.stage.addChild(this.m_notification);
+        this["stage"].removeChild(this.m_notification);
+        this["stage"].addChild(this.m_notification);
     }
-    this.stage.removeChild(this.m_screenDimmer);
-    this.stage.addChild(this.m_screenDimmer);
+    this["stage"].removeChild(this.m_screenDimmer);
+    this["stage"].addChild(this.m_screenDimmer);
 };
 
 /**
@@ -1106,13 +1106,13 @@ runeos.scene.Launcher.prototype.m_updateEmptyLibraryMessage = function() {
         return;
     }
     if (!this.m_catalogReady || !this.catalog) return;
-    if (this.m_tilemaps.navigableCount > 0) {
+    if (this.m_tilemaps["navigableCount"] > 0) {
         if (this.m_emptyNotification) this.m_emptyNotification.hide();
         return;
     }
     var message = this.m_getEmptyLibraryMessage();
     if (!this.m_emptyNotification) this.m_constructEmptyNotification();
-    if (this.m_emptyNotification.visible && this.m_emptyNotification.message === message) return;
+    if (this.m_emptyNotification.visible && this.m_emptyNotification["message"] === message) return;
     this.m_emptyNotification.show(message, {
         persistent: true
     });
@@ -1146,10 +1146,10 @@ runeos.scene.Launcher.prototype.m_getEmptyLibraryMessage = function() {
  */
 runeos.scene.Launcher.prototype.m_showMessage = function(message, options) {
     if (!this.m_notification) this.m_constructNotification();
-    this.stage.removeChild(this.m_notification);
-    this.stage.addChild(this.m_notification);
-    this.stage.removeChild(this.m_screenDimmer);
-    this.stage.addChild(this.m_screenDimmer);
+    this["stage"].removeChild(this.m_notification);
+    this["stage"].addChild(this.m_notification);
+    this["stage"].removeChild(this.m_screenDimmer);
+    this["stage"].addChild(this.m_screenDimmer);
     this.m_notification.show(message, options);
 };
 
@@ -1163,31 +1163,31 @@ runeos.scene.Launcher.prototype.m_showMessage = function(message, options) {
  */
 runeos.scene.Launcher.prototype.m_constructContent = function(options) {
     this.m_background = new runeos.ui.LauncherBackground({config: options.backgroundConfig});
-    this.stage.addChild(this.m_background);
+    this["stage"].addChild(this.m_background);
     this.m_tilemaps = new runeos.ui.tilemap.Tilemaps({
-        tweens: this.tweens,
+        tweens: this["tweens"],
         config: this.m_tilemapConfig,
         tileConfig: this.m_tileConfig,
         textConfig: this.m_textConfig
     });
-    this.stage.addChild(this.m_tilemaps);
+    this["stage"].addChild(this.m_tilemaps);
     this.m_categoryHeader = new runeos.ui.CategoryHeader({
         width: this.m_tilemaps.width,
         config: this.m_config,
         textConfig: this.m_textConfig
     });
-    this.stage.addChild(this.m_categoryHeader);
+    this["stage"].addChild(this.m_categoryHeader);
     this.m_screenDimmer = new runeos.ui.ScreenDimmer({
         width: this.m_tilemaps.width,
         height: this.m_tilemaps.height,
         opacity: this.m_config.idleOpacity,
         duration: this.m_config.idleFadeMs
     });
-    this.stage.addChild(this.m_screenDimmer);
+    this["stage"].addChild(this.m_screenDimmer);
 
     // Reserve header space without clipping the scrolling viewport.
     this.m_tilemaps.contentTop = this.m_categoryHeader.height + this.m_config.headerGapPx;
-    this.stage.backgroundColor = this.m_config.backgroundColor;
+    this["stage"].backgroundColor = this.m_config.backgroundColor;
     this.m_tilemaps.onSelectionChange = this.m_onSelectionChange.bind(this);
     this.catalog = options.catalog === false ? null : new runeos.launcher.CategoryTilemapManager(this.m_tilemaps, {
         config: this.m_tileConfig,
@@ -1319,9 +1319,9 @@ runeos.scene.Launcher.prototype.m_onSelectionChange = function(map, tile, previo
 runeos.scene.Launcher.prototype.m_updateCategoryHeader = function() {
     var tilemaps = this.m_tilemaps;
     var header = this.m_categoryHeader;
-    var selected = tilemaps.selection.tilemap;
+    var selected = tilemaps["selection"].tilemap;
     if (!selected) {
-        header.setCategory("", "", tilemaps.navigableIndex, tilemaps.navigableCount);
+        header.setCategory("", "", tilemaps["navigableIndex"], tilemaps["navigableCount"]);
         header.setContentBounds(0, header.width);
         return;
     }
@@ -1330,8 +1330,8 @@ runeos.scene.Launcher.prototype.m_updateCategoryHeader = function() {
     header.setCategory(
         selected.name,
         selected.description,
-        tilemaps.navigableIndex,
-        tilemaps.navigableCount,
+        tilemaps["navigableIndex"],
+        tilemaps["navigableCount"],
         selected.length
     );
     header.setContentBounds(contentLeft, selected.width);

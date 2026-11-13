@@ -109,7 +109,7 @@ runeos.camera.Camera.prototype.dispose = function() {
  * @ignore
  */
 runeos.camera.Camera.prototype.m_renderBackgroundColor = function() {
-    var canvas = this.m_output.canvas;
+    var canvas = this.m_output["canvas"];
     canvas.clear();
     if (this.m_input.backgroundColor) {
         canvas.drawFill(this.m_input.backgroundColor);
@@ -124,8 +124,8 @@ runeos.camera.Camera.prototype.m_renderBackgroundColor = function() {
  * @ignore
  */
 runeos.camera.Camera.prototype.m_renderInput = function() {
-    var children = this.m_input.children;
-    var canvas = this.m_output.canvas;
+    var children = this.m_input["children"];
+    var canvas = this.m_output["canvas"];
     for (var i = 0, length = children.length; i < length; i++) {
         canvas.renderDisplayObject(children[i]);
     }

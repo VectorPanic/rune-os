@@ -108,7 +108,7 @@ runeos.display.Screen.prototype.appendTo = function(element) {
  */
 runeos.display.Screen.prototype.setResolution = function(width, height) {
     if (this.m_canvas) {
-        this.canvas.resize(
+        this["canvas"].resize(
             Math.min(width, runeos.display.Screen.DEFAULT_WIDTH),
             Math.min(height, runeos.display.Screen.DEFAULT_HEIGHT)
         );
@@ -127,7 +127,7 @@ runeos.display.Screen.prototype.restore = function() {
     if (!this.m_canvas.element.parentNode && document.body) {
         this.appendTo(document.body);
     }
-    this.canvas.reset(runeos.display.Screen.DEFAULT_WIDTH, runeos.display.Screen.DEFAULT_HEIGHT);
+    this["canvas"].reset(runeos.display.Screen.DEFAULT_WIDTH, runeos.display.Screen.DEFAULT_HEIGHT);
     this.m_canvas.element.style.imageRendering = "pixelated";
 };
 
@@ -156,7 +156,7 @@ runeos.display.Screen.prototype.m_constructCanvas = function() {
     this.m_canvas = new runeos.display.Canvas(
         runeos.display.Screen.DEFAULT_WIDTH, runeos.display.Screen.DEFAULT_HEIGHT
     );
-    this.m_canvas.context.imageSmoothingQuality = "low";
+    this.m_canvas["context"].imageSmoothingQuality = "low";
 };
 
 /**

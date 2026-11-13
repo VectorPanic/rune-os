@@ -338,7 +338,7 @@ runeos.ui.tilemap.Tilemap.prototype.select = function(tile, refresh) {
     if (this.m_tiles.indexOf(tile) === -1) throw new RangeError("Tile is not in this map.");
     if (this.m_selected) this.m_selected.selected = false;
     this.m_selected = tile;
-    tile.selected = !this.m_owner || this.m_owner.selected === this;
+    tile["selected"] = !this.m_owner || this.m_owner["selected"] === this;
     if (this.m_owner && refresh !== false) this.m_owner.refresh(true);
 };
 

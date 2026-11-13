@@ -74,7 +74,7 @@ runeos.display.DisplayGroup.prototype.renderTo = function(canvas, offsetX, offse
     if (!this.visible || this.alpha <= 0) return;
     var x = this.x + (offsetX || 0);
     var y = this.y + (offsetY || 0);
-    var context = canvas.context;
+    var context = canvas["context"];
     context.save();
     try {
         context.globalAlpha *= this.alpha;

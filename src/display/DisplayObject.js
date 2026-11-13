@@ -179,7 +179,7 @@ runeos.display.DisplayObject.prototype.update = function(step) {
  * @ignore
  */
 runeos.display.DisplayObject.prototype.render = function() {
-    var canvas = this.canvas;
+    var canvas = this["canvas"];
     canvas.resize(this.width, this.height);
     canvas.clear();
     if (this.backgroundColor) {

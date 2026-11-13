@@ -617,14 +617,15 @@ runeos.media.Sound.prototype.m_constructGraph = function() {
     if (this.m_source) return;
     if (!this.m_element) throw Error("Sound is disposed.");
     try {
-        var context = this.m_channel.context;
+        var context = /** @type {!AudioContext} */ (this.m_channel["context"]);
         this.m_source = context.createMediaElementSource(this.m_element);
         this.m_gain = context.createGain();
         this.m_source.connect(this.m_gain);
         if (typeof context.createStereoPanner === "function") {
-            this.m_panner = context.createStereoPanner();
-            this.m_gain.connect(this.m_panner);
-            this.m_panner.connect(this.m_channel.m_getOutput());
+            var panner = context.createStereoPanner();
+            this.m_panner = panner;
+            this.m_gain.connect(panner);
+            panner.connect(this.m_channel.m_getOutput());
         } else {
             this.m_gain.connect(this.m_channel.m_getOutput());
         }
@@ -646,10 +647,10 @@ runeos.media.Sound.prototype.m_applyProperties = function() {
     if (this.m_disposed || !this.m_element) return;
     this.m_element.loop = this.m_loop;
     var owner = this.m_channel.m_owner;
-    var masterRate = this.m_channel === owner.master ? 1 : owner.master.rate;
+    var masterRate = this.m_channel === owner["master"] ? 1 : owner["master"].rate;
     this.m_element.preservesPitch = this.m_preservesPitch;
     if ("webkitPreservesPitch" in this.m_element) this.m_element["webkitPreservesPitch"] = this.m_preservesPitch;
-    this.m_element.playbackRate = runeos.media.Sounds.m_clamp(this.m_rate * this.m_channel.rate * masterRate, 0.0625, 16);
+    this.m_element.playbackRate = runeos.media.Sounds.m_clamp(this.m_rate * this.m_channel["rate"] * masterRate, 0.0625, 16);
     if (this.m_gain) this.m_gain.gain.value = this.m_muted ? 0 : this.m_volume;
     if (this.m_panner) this.m_panner.pan.value = this.m_pan;
 };

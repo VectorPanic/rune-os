@@ -134,7 +134,7 @@ runeos.ui.GameMessage.prototype.render = function(canvas, opacity) {
         x: note.x * scale - 1, y: note.y * scale - 1,
         width: note.width * scale + 2, height: note.height * scale + 2
     })) return;
-    var context = canvas.context;
+    var context = canvas["context"];
     context.save();
     try {
         context.setTransform(scale, 0, 0, scale, 0, 0);

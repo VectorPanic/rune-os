@@ -241,7 +241,7 @@ runeos.application.ApplicationLauncher.prototype.launch = function(request) {
  * @returns {boolean}
  */
 runeos.application.ApplicationLauncher.prototype.cancel = function() {
-    if (this.m_disposed || !this.preparing) return false;
+    if (this.m_disposed || !this["preparing"]) return false;
     var request = this.m_request;
     this.m_generation++;
     this.m_request = null;
@@ -354,7 +354,7 @@ runeos.application.ApplicationLauncher.prototype.m_acceptRequest = function(requ
  */
 runeos.application.ApplicationLauncher.prototype.m_begin = function(request, generation) {
     this.m_notify("accepted", request);
-    if (!this.m_isCurrentRequest(request, generation) || !this.preparing) return;
+    if (!this.m_isCurrentRequest(request, generation) || !this["preparing"]) return;
 
     if (request.library && request.id) {
         this.m_prepare(request, generation);
@@ -407,7 +407,7 @@ runeos.application.ApplicationLauncher.prototype.m_isCurrentRequest = function(r
  * @private
  */
 runeos.application.ApplicationLauncher.prototype.m_acceptResult = function(request, generation) {
-    if (!this.m_isCurrentRequest(request, generation) || !this.preparing) return false;
+    if (!this.m_isCurrentRequest(request, generation) || !this["preparing"]) return false;
     if (request.scenes.current === this.m_returnScene) return true;
     this.cancel();
     return false;

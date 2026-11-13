@@ -240,7 +240,7 @@ runeos.display.Canvas.prototype.renderDisplayObject = function(object, offsetX, 
     try {
         context.globalAlpha *= object.alpha;
 
-        context.drawImage(object.canvas.element, x, y, width, height);
+        context.drawImage(object["canvas"].element, x, y, width, height);
     } finally {
         context.restore();
     }

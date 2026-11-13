@@ -313,7 +313,7 @@ Object.defineProperty(runeos.system.Main.prototype, "screenFade", {
  */
 runeos.system.Main.prototype.render = function() {
     if (this.m_screenFade) this.m_screenFade.restore();
-    var scene = this.m_scenes.current;
+    var scene = this.m_scenes["current"];
     var loadingStage = scene && scene.loadingStage;
     if (scene && (scene.renderToScreen || loadingStage)) {
         if (!this.m_renderingOS) {
@@ -325,8 +325,8 @@ runeos.system.Main.prototype.render = function() {
     } else {
         this.m_renderingOS = false;
     }
-    if (scene && typeof scene.render === "function") scene.render(this.m_screen.canvas);
-    if (this.m_screenFade) this.m_screenFade.render(this.m_screen.canvas);
+    if (scene && typeof scene.render === "function") scene.render(this.m_screen["canvas"]);
+    if (this.m_screenFade) this.m_screenFade.render(this.m_screen["canvas"]);
 };
 
 //------------------------------------------------------------------------------
@@ -425,8 +425,8 @@ runeos.system.Main.prototype.m_reloadPublishedLibrary = function() {
  */
 runeos.system.Main.prototype.m_syncLibrary = function(step) {
     if (!this.m_librarySync) return;
-    var scene = this.m_scenes.current;
-    var activity = scene instanceof runeos.scene.Launcher ? scene.activity : null;
+    var scene = this.m_scenes["current"];
+    var activity = scene instanceof runeos.scene.Launcher ? scene["activity"] : null;
     var focused = activity ? activity.focused : !document.hidden &&
         (typeof document.hasFocus !== "function" || document.hasFocus());
     var allowed = !!activity && focused && scene.syncAllowed;
@@ -532,7 +532,7 @@ runeos.system.Main.prototype.m_tick = function(timestamp) {
         this.m_screenFade.restore();
         this.m_screenFade.update(step);
     }
-    var scene = this.m_scenes.current;
+    var scene = this.m_scenes["current"];
     if (scene && scene.renderToScreen && scene.tweens) {
         scene.tweens.update(step);
     }
@@ -567,9 +567,9 @@ runeos.system.Main.prototype.m_constructInputs = function() {
  * @private
  */
 runeos.system.Main.prototype.m_syncInputs = function() {
-    var scene = this.m_scenes.current;
+    var scene = this.m_scenes["current"];
     var enabled = Boolean(scene && scene.renderToScreen);
-    this.m_inputs.keyboard.enabled = enabled;
+    this.m_inputs["keyboard"].enabled = enabled;
     if (this.m_inputs.gamepads) this.m_inputs.gamepads.enabled = enabled;
 };
 
@@ -594,7 +594,7 @@ runeos.system.Main.prototype.m_constructSounds = function() {
  */
 runeos.system.Main.prototype.m_syncSounds = function() {
     if (this.m_sounds) {
-        var scene = this.m_scenes.current;
+        var scene = this.m_scenes["current"];
         this.m_sounds.enabled = Boolean(scene && scene.renderToScreen);
     }
 };

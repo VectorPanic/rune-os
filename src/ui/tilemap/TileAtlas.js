@@ -247,12 +247,12 @@ runeos.ui.tilemap.TileAtlas.prototype.update = function(step) {
  * @returns {undefined}
  */
 runeos.ui.tilemap.TileAtlas.prototype.render = function(context) {
-    if (this.opacity <= 0 || this.width <= 0 || this.height <= 0) return;
+    if (this["opacity"] <= 0 || this.width <= 0 || this.height <= 0) return;
     this.m_updateRegion();
     var region = this.m_region;
     context.save();
     try {
-        context.globalAlpha *= this.opacity;
+        context.globalAlpha *= this["opacity"];
         context.drawImage(this.m_image, region.x, region.y, region.width, region.height,
             this.x, this.y, this.width, this.height);
     } finally {
