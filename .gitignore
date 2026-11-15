@@ -20,3 +20,6 @@ dist
 # LOG FILES
 /scripts/log/
 library/log/
+
+# THIRD-PARTY FONT (download separately; see README)
+/asset/otf/runeos_font_header.otf

@@ -153,6 +153,18 @@ Downloaded games remain available offline, and the original local library is pre
 
 Rune Cloud Client provides a graphical interface for managing and publishing content to the server, completing the workflow without requiring direct interaction with its API.
 
+## Third-party assets
+
+Rune OS uses Norse Bold by Joël Carrouché. The font file is not included in this repository and is ignored by Git.
+
+Before running or packaging Rune OS:
+
+1. Download Norse from [the author's website](https://www.joelcarrouche.com/fonts/norse).
+2. Extract the archive and copy `Norsebold.otf` to `asset/otf/runeos_font_header.otf`. Only rename the file; do not modify its contents.
+3. Keep the font installed at that path for local development and application packaging.
+
+The font has separate terms from the application code; see [the original font license](asset/otf/Norse-LICENSE.txt) and the license supplied with your download. The license permits embedding in applications and web pages, but requires the author's written permission to redistribute or share the standalone font file. Do not commit the downloaded font to the repository.
+
 ---
 
 *Made for the joy of pressing Start.*
