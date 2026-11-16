@@ -159,6 +159,14 @@ Rune OS uses Norse Bold by Joël Carrouché. The font file is not included in th
 
 Before running or packaging Rune OS:
 
+Run the following command from the project root to automatically download Norse Bold and save it to `asset/otf/runeos_font_header.otf` (requires `curl` and `unzip`):
+
+```sh
+bash scripts/shell/download_font.sh
+```
+
+Alternatively, install the font manually:
+
 1. Download Norse from [the author's website](https://www.joelcarrouche.com/fonts/norse).
 2. Extract the archive and copy `Norsebold.otf` to `asset/otf/runeos_font_header.otf`. Only rename the file; do not modify its contents.
 3. Keep the font installed at that path for local development and application packaging.
