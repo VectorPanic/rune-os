@@ -188,6 +188,8 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
     },
     selector: {
         refreshHoldMs: 3000,
+        navigationRepeatDelayMs: 500,
+        navigationRepeatIntervalMs: 200,
         idleEnabled: true,
         idleDelayMs: 15000,
         idleOpacity: 0.5,

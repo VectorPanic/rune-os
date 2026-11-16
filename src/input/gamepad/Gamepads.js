@@ -397,6 +397,16 @@ runeos.input.Gamepads.prototype.justReleased = function(button) {
  *
  * @returns {boolean}
  */
+runeos.input.Gamepads.prototype.directionPressed = function(direction) {
+    return this.m_any("directionPressed", direction);
+};
+
+/**
+ * Checks fresh navigation presses from every connected controller.
+ *
+ * @param {string} direction LEFT, RIGHT, UP or DOWN.
+ * @returns {boolean}
+ */
 runeos.input.Gamepads.prototype.directionJustPressed = function(direction) {
     return this.m_any("directionJustPressed", direction);
 };

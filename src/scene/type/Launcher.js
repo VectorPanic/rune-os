@@ -209,6 +209,16 @@ runeos.scene.Launcher = function(options) {
     this.m_navigateSound = null;
 
     /**
+     * Navigation direction armed by a fresh press and time until its next hop.
+     * @type {?string}
+     * @private
+     */
+    this.m_repeatDirection = null;
+
+    /** @type {number} @private */
+    this.m_repeatRemaining = 0;
+
+    /**
      * Game-launch confirmation voice.
      *
      * @type {runeos.media.Sound}
@@ -559,15 +569,21 @@ runeos.scene.Launcher.prototype.init = function(previousScene) {
  * @returns {undefined}
  */
 runeos.scene.Launcher.prototype.update = function(step) {
-    if (this.m_disposed || this.m_refreshing) return;
+    if (this.m_disposed || this.m_refreshing) {
+        this.m_repeatDirection = null;
+        return;
+    }
     this.m_updateSyncMessage();
     this.m_updateCategoryHeader();
     runeos.scene.Scene.prototype.update.call(this, step);
     this.m_updateEmptyLibraryMessage();
-    if (runeos.instance && runeos.instance.screenFade && runeos.instance.screenFade.active) return;
-    if (runeos.instance && runeos.instance.librarySync && runeos.instance.librarySync.publishing) return;
-    if (this.m_idle.update(step, runeos.instance && runeos.instance.inputs)) return;
-    if (this.m_leaving || this.m_launcher.busy) return;
+    if ((runeos.instance && runeos.instance.screenFade && runeos.instance.screenFade.active) ||
+        (runeos.instance && runeos.instance.librarySync && runeos.instance.librarySync.publishing) ||
+        this.m_idle.update(step, runeos.instance && runeos.instance.inputs) ||
+        this.m_leaving || this.m_launcher.busy) {
+        this.m_repeatDirection = null;
+        return;
+    }
     var sounds = runeos.instance && this.sounds;
     if (this.m_stopSoundPending && this.m_stopSound && sounds && sounds.enabled) {
         this.m_stopSoundPending = false;
@@ -577,20 +593,48 @@ runeos.scene.Launcher.prototype.update = function(step) {
     if (this["keyboard"].justPressed("F5") || (gamepads && gamepads.justHeld &&
         gamepads.justHeld(runeos.input.Gamepad.SELECT, this.m_config.refreshHoldMs, step))) {
         this.m_refreshLibrary(true);
+        this.m_repeatDirection = null;
         return;
     }
     if (this["keyboard"].justPressed("ENTER") || (gamepads &&
         (gamepads.justPressed(runeos.input.Gamepad.A) || gamepads.justPressed(runeos.input.Gamepad.START)))) {
         this.launchSelected();
+        this.m_repeatDirection = null;
         return;
     }
+    this.m_updateNavigation(step, gamepads);
+};
+
+/**
+ * Moves immediately on a fresh press, then repeats held keyboard or controller navigation.
+ * At most one hop is emitted per frame, without catching up after slow frames.
+ *
+ * @param {number} step Elapsed frame time in milliseconds.
+ * @param {?runeos.input.Gamepads} gamepads Sampled controllers.
+ * @returns {undefined}
+ * @private
+ */
+runeos.scene.Launcher.prototype.m_updateNavigation = function(step, gamepads) {
     var directions = runeos.input.Gamepad.DIRECTIONS;
     for (var i = 0; i < directions.length; i++) {
-        if (this["keyboard"].justPressed(directions[i]) ||
-            (gamepads && gamepads.directionJustPressed(directions[i]))) {
+        var controllerPress = gamepads && gamepads.directionJustPressed(directions[i]);
+        if (this["keyboard"].justPressed(directions[i]) || controllerPress) {
+            this.m_repeatDirection = directions[i];
+            this.m_repeatRemaining = this.m_config.navigationRepeatDelayMs;
             this.m_tilemaps.navigate(directions[i]);
-            break;
+            return;
         }
+    }
+    if (!this.m_repeatDirection) return;
+    if (!this["keyboard"].pressed(this.m_repeatDirection) &&
+        (!gamepads || !gamepads.directionPressed(this.m_repeatDirection))) {
+        this.m_repeatDirection = null;
+        return;
+    }
+    this.m_repeatRemaining -= Math.max(0, step);
+    if (this.m_repeatRemaining <= 0) {
+        this.m_tilemaps.navigate(this.m_repeatDirection);
+        this.m_repeatRemaining = this.m_config.navigationRepeatIntervalMs;
     }
 };
 

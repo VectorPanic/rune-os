@@ -503,6 +503,17 @@ runeos.input.Gamepad.prototype.justReleased = function(button) {
  *
  * @returns {boolean}
  */
+runeos.input.Gamepad.prototype.directionPressed = function(direction) {
+    var index = runeos.input.Gamepad.DIRECTIONS.indexOf(direction);
+    return index !== -1 && this.m_navigation[index] === true;
+};
+
+/**
+ * Reads the initial edge of a combined navigation direction.
+ *
+ * @param {string} direction LEFT, RIGHT, UP or DOWN.
+ * @returns {boolean}
+ */
 runeos.input.Gamepad.prototype.directionJustPressed = function(direction) {
     var index = runeos.input.Gamepad.DIRECTIONS.indexOf(direction);
     return index !== -1 && this.m_navigation[index] && !this.m_previousNavigation[index];
