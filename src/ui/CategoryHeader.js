@@ -21,7 +21,7 @@ runeos.ui.CategoryHeader = function(options) {
     options = options || {};
     var settings = runeos.system.Config.getGroup("selector", options.config);
     var text = runeos.system.Config.getGroup("text", options.textConfig);
-    var minimumHeight = runeos.text.Typography.getHeight("title", text) + runeos.text.Typography.getHeight("detail", text) + runeos.ui.CategoryHeader.VERTICAL_PADDING;
+    var minimumHeight = runeos.text.Typography.getHeight("title", text) + runeos.text.Typography.getHeight("detail", text) + runeos.ui.CategoryHeader.DESCRIPTION_GAP + runeos.ui.CategoryHeader.VERTICAL_PADDING;
 
     //--------------------------------------------------------------------------
     // Super call
@@ -155,6 +155,13 @@ runeos.ui.CategoryHeader.TEXT_PADDING = 4;
  * @constant {number}
  */
 runeos.ui.CategoryHeader.TOP_PADDING = 4;
+
+/**
+ * Space between the category heading and its description.
+ *
+ * @constant {number}
+ */
+runeos.ui.CategoryHeader.DESCRIPTION_GAP = 4;
 
 //------------------------------------------------------------------------------
 // Public prototype getter and setter methods
@@ -429,7 +436,7 @@ runeos.ui.CategoryHeader.prototype.m_layoutHeading = function(left, available) {
  */
 runeos.ui.CategoryHeader.prototype.m_layoutDescription = function(left, available) {
     this.m_descriptionField.x = left;
-    this.m_descriptionField.y = this.m_titleField.y + this.m_titleField.height;
+    this.m_descriptionField.y = this.m_titleField.y + this.m_titleField.height + runeos.ui.CategoryHeader.DESCRIPTION_GAP;
     this.m_descriptionField.width = available;
 };
 
