@@ -839,7 +839,7 @@ runeos.ui.tilemap.Tilemaps.prototype.m_showMaps = function(positions, animate) {
 };
 
 /**
- * Calculates scroll position while reserving room for selection overshoot.
+ * Calculates scroll position with selection overshoot and bottom spacing.
  *
  * @param {runeos.ui.tilemap.Tilemap} map Map to position.
  *
@@ -852,7 +852,7 @@ runeos.ui.tilemap.Tilemaps.prototype.m_getMapY = function(map) {
     var tile = map["selected"];
     if (!tile) return y;
     this.m_scrollViewport.start = this.contentTop;
-    this.m_scrollViewport.end = this.height;
+    this.m_scrollViewport.end = Math.max(this.contentTop, this.height - this.m_config.bottomPaddingPx);
     return runeos.util.ViewportScroll.reveal(this.m_scrollViewport, this.m_getScrollBounds(tile), y);
 };
 

@@ -260,6 +260,7 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
     },
     tilemaps: {
         gapPx: 150,
+        bottomPaddingPx: 48,
         transitionMs: 250,
         inactiveOpacity: 0.5
     },
