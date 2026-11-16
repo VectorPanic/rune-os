@@ -103,6 +103,7 @@ google-closure-compiler \
 --js "./../../src/launcher/LibraryRefresh.js" \
 --js "./../../src/launcher/LibraryStatus.js" \
 --js "./../../src/launcher/LauncherIdle.js" \
+--js "./../../src/launcher/SelectorInput.js" \
 --js "./../../src/scene/type/Launcher.js" \
 --js "./../../src/ui/BootLogo.js" \
 --js "./../../src/scene/type/Boot.js" \

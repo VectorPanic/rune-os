@@ -209,14 +209,12 @@ runeos.scene.Launcher = function(options) {
     this.m_navigateSound = null;
 
     /**
-     * Navigation direction armed by a fresh press and time until its next hop.
-     * @type {?string}
+     * Translates keyboard and controller state into selector commands.
+     *
+     * @type {runeos.launcher.SelectorInput}
      * @private
      */
-    this.m_repeatDirection = null;
-
-    /** @type {number} @private */
-    this.m_repeatRemaining = 0;
+    this.m_selectorInput = new runeos.launcher.SelectorInput(this.m_config);
 
     /**
      * Game-launch confirmation voice.
@@ -570,72 +568,64 @@ runeos.scene.Launcher.prototype.init = function(previousScene) {
  */
 runeos.scene.Launcher.prototype.update = function(step) {
     if (this.m_disposed || this.m_refreshing) {
-        this.m_repeatDirection = null;
+        this.m_selectorInput.reset();
         return;
     }
     this.m_updateSyncMessage();
     this.m_updateCategoryHeader();
     runeos.scene.Scene.prototype.update.call(this, step);
     this.m_updateEmptyLibraryMessage();
-    if ((runeos.instance && runeos.instance.screenFade && runeos.instance.screenFade.active) ||
-        (runeos.instance && runeos.instance.librarySync && runeos.instance.librarySync.publishing) ||
-        this.m_idle.update(step, runeos.instance && runeos.instance.inputs) ||
-        this.m_leaving || this.m_launcher.busy) {
-        this.m_repeatDirection = null;
+    if (!this.m_canHandleInput(step)) {
+        this.m_selectorInput.reset();
         return;
     }
+    this.m_playPendingStopSound();
+    this.m_handleInput(step);
+};
+
+/**
+ * Checks whether navigation and shortcuts may run during this frame.
+ * Keeps idle updates suspended during fades and library publication.
+ *
+ * @param {number} step Elapsed frame time.
+ *
+ * @returns {boolean}
+ * @private
+ */
+runeos.scene.Launcher.prototype.m_canHandleInput = function(step) {
+    var instance = runeos.instance;
+    if (instance && instance.screenFade && instance.screenFade.active) return false;
+    if (instance && instance.librarySync && instance.librarySync.publishing) return false;
+    if (this.m_idle.update(step, instance && instance.inputs)) return false;
+    return !this.m_leaving && !this.m_launcher["busy"];
+};
+
+/**
+ * Plays deferred return audio once the selector becomes available.
+ *
+ * @returns {undefined}
+ * @private
+ */
+runeos.scene.Launcher.prototype.m_playPendingStopSound = function() {
     var sounds = runeos.instance && this.sounds;
     if (this.m_stopSoundPending && this.m_stopSound && sounds && sounds.enabled) {
         this.m_stopSoundPending = false;
         this.m_stopSound.play(true);
     }
-    var gamepads = this["gamepads"];
-    if (this["keyboard"].justPressed("F5") || (gamepads && gamepads.justHeld &&
-        gamepads.justHeld(runeos.input.Gamepad.SELECT, this.m_config.refreshHoldMs, step))) {
-        this.m_refreshLibrary(true);
-        this.m_repeatDirection = null;
-        return;
-    }
-    if (this["keyboard"].justPressed("ENTER") || (gamepads &&
-        (gamepads.justPressed(runeos.input.Gamepad.A) || gamepads.justPressed(runeos.input.Gamepad.START)))) {
-        this.launchSelected();
-        this.m_repeatDirection = null;
-        return;
-    }
-    this.m_updateNavigation(step, gamepads);
 };
 
 /**
- * Moves immediately on a fresh press, then repeats held keyboard or controller navigation.
- * At most one hop is emitted per frame, without catching up after slow frames.
+ * Executes at most one selector command, after scene availability checks.
  *
  * @param {number} step Elapsed frame time in milliseconds.
- * @param {?runeos.input.Gamepads} gamepads Sampled controllers.
  * @returns {undefined}
  * @private
  */
-runeos.scene.Launcher.prototype.m_updateNavigation = function(step, gamepads) {
-    var directions = runeos.input.Gamepad.DIRECTIONS;
-    for (var i = 0; i < directions.length; i++) {
-        var controllerPress = gamepads && gamepads.directionJustPressed(directions[i]);
-        if (this["keyboard"].justPressed(directions[i]) || controllerPress) {
-            this.m_repeatDirection = directions[i];
-            this.m_repeatRemaining = this.m_config.navigationRepeatDelayMs;
-            this.m_tilemaps.navigate(directions[i]);
-            return;
-        }
-    }
-    if (!this.m_repeatDirection) return;
-    if (!this["keyboard"].pressed(this.m_repeatDirection) &&
-        (!gamepads || !gamepads.directionPressed(this.m_repeatDirection))) {
-        this.m_repeatDirection = null;
-        return;
-    }
-    this.m_repeatRemaining -= Math.max(0, step);
-    if (this.m_repeatRemaining <= 0) {
-        this.m_tilemaps.navigate(this.m_repeatDirection);
-        this.m_repeatRemaining = this.m_config.navigationRepeatIntervalMs;
-    }
+runeos.scene.Launcher.prototype.m_handleInput = function(step) {
+    var command = this.m_selectorInput.read(step, this["keyboard"], this["gamepads"]);
+    if (command === "refresh") this.m_refreshLibrary(true);
+    else if (command === "launch") this.launchSelected();
+    else if (command) this.m_tilemaps.navigate(command);
 };
 
 /**
@@ -652,10 +642,12 @@ runeos.scene.Launcher.prototype.leave = function(onStopped) {
         runeos.scene.Scene.prototype.leave.call(this, onStopped);
         return;
     }
+    
     if (this.m_prepareLeave()) {
         this.m_leaveImmediately(onStopped);
         return;
     }
+    
     this.m_leaveWithFade(onStopped);
 };
 
@@ -671,6 +663,7 @@ runeos.scene.Launcher.prototype.dispose = function(onDisposed) {
         runeos.scene.Scene.prototype.dispose.call(this, onDisposed);
         return;
     }
+    
     this.m_disposed = true;
     this.m_idle.dispose();
     this.m_launcher.dispose();
@@ -803,6 +796,7 @@ runeos.scene.Launcher.prototype.m_leaveWithFade = function(onStopped) {
         onStopped();
         return;
     }
+    
     this.m_leaveCallbacks.push(onStopped);
     if (this.m_leaving) return;
     this.m_leaving = true;
