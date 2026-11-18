@@ -151,6 +151,8 @@ Rune OS automatically checks for updates, downloads and verifies new content, an
 
 Downloaded games remain available offline, and the original local library is preserved.
 
+Highscore synchronization is separately opt-in. Set `sync.highscoresEnabled` to `true` and set `sync.baseUrl` to the Rune Cloud API URL. It works independently of `sync.apiEnabled`, which controls library synchronization. Games request synchronization at a suitable time through the Rune SDK's `highscores.sync()`; when synchronization fails or is disabled, the existing local list remains available.
+
 Rune Cloud Client provides a graphical interface for managing and publishing content to the server, completing the workflow without requiring direct interaction with its API.
 
 ## Third-party assets

@@ -246,3 +246,21 @@ var runeos = function() {
 runeos.install = function(application) {
     runeos.app = application;
 };
+
+/**
+ * Requests synchronization for the currently running game's highscore tables.
+ *
+ * @param {string} id SDK application identifier.
+ * @param {Object} highscores Active SDK highscore object.
+ * @param {Function} callback Completion callback.
+ * @returns {undefined}
+ */
+runeos.syncHighscores = function(id, highscores, callback) {
+    var instance = runeos.instance;
+    var scene = instance && instance.scenes && instance.scenes.current;
+    if (scene && typeof scene.syncHighscores === "function") {
+        scene.syncHighscores(id, highscores, callback);
+    } else if (typeof callback === "function") {
+        callback({success: false, updated: false});
+    }
+};

@@ -90,6 +90,14 @@ runeos.system.Main = function(options) {
     this.m_syncProvider = options.syncProvider || null;
 
     /**
+     * Optional provider for on-demand highscore synchronization.
+     *
+     * @type {?Object}
+     * @private
+     */
+    this.m_highscoreProvider = options.highscoreProvider || null;
+
+    /**
      * Input devices used by the OS scenes.
      *
      * @type {runeos.input.Inputs}
@@ -168,6 +176,23 @@ Object.defineProperty(runeos.system.Main.prototype, "config", {
     get : function() {
         return this.m_config || runeos.system.Config.DEFAULTS;
     }
+});
+
+/**
+ * Optional provider for on-demand highscore synchronization.
+ *
+ * @member {?Object} highscoreProvider
+ * @memberof runeos.system.Main
+ * @instance
+ * @readonly
+ */
+Object.defineProperty(runeos.system.Main.prototype, "highscoreProvider", {
+    /**
+     * @this runeos.system.Main
+     * @returns {?Object}
+     * @ignore
+     */
+    get : function() { return this.m_highscoreProvider; }
 });
 
 /**

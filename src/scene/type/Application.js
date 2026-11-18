@@ -63,6 +63,14 @@ runeos.scene.Application = function(source, returnScene, options) {
     this.m_app = null;
 
     /**
+     * Highscore synchronization owned by this application session.
+     *
+     * @type {?runeos.sync.HighscoreSync}
+     * @private
+     */
+    this.m_highscoreSync = null;
+
+    /**
      * Whether execution has failed or been disposed.
      *
      * @type {boolean}
@@ -336,6 +344,23 @@ runeos.scene.Application.prototype.exit = function(onStopped) {
     this.m_stopApplication();
 };
 
+/**
+ * Requests synchronization only for this scene's active application.
+ *
+ * @param {string} id SDK application identifier.
+ * @param {Object} highscores Active SDK highscore object.
+ * @param {Function} callback Completion callback.
+ * @returns {undefined}
+ */
+runeos.scene.Application.prototype.syncHighscores = function(id, highscores, callback) {
+    if (!this.m_isActive() || !this.m_app || this.m_app["id"] !== id ||
+        this.m_app["highscores"] !== highscores || !this.m_highscoreSync) {
+        if (typeof callback === "function") callback({success: false, updated: false});
+        return;
+    }
+    this.m_highscoreSync.sync(id, highscores, callback);
+};
+
 //------------------------------------------------------------------------------
 // Override public prototype methods (ENGINE)
 //------------------------------------------------------------------------------
@@ -518,6 +543,8 @@ runeos.scene.Application.prototype.m_onFocus = function() {
  */
 runeos.scene.Application.prototype.m_prepareExit = function() {
     this.m_finished = true;
+    if (this.m_highscoreSync) this.m_highscoreSync.dispose();
+    this.m_highscoreSync = null;
     this.m_idle.dispose();
     if (this.m_exitIndicator) this.m_exitIndicator.restore();
     if (this.m_idleMessage) this.m_idleMessage.dispose();
@@ -762,6 +789,9 @@ runeos.scene.Application.prototype.m_startRegistered = function() {
     if (!runeos.app || typeof runeos.app.bootstrap !== "function") {
         throw new Error("Application bundle did not register a bootstrap function.");
     }
+    this.m_highscoreSync = new runeos.sync.HighscoreSync(
+        runeos.instance.config.sync.highscoresEnabled ? runeos.instance["highscoreProvider"] : null
+    );
     this.m_app = runeos.app.bootstrap(function() {});
     if (!this.m_app) throw new Error("Application bootstrap returned no instance.");
     this.m_idle.reset();

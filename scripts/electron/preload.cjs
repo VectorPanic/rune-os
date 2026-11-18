@@ -24,6 +24,8 @@ if (argument) {
         publishSync(prepared) { return ipcRenderer.invoke("runeos:sync-publish", prepared); },
         discardSync(prepared) { return ipcRenderer.invoke("runeos:sync-discard", prepared); },
         cancelSync(id) { return ipcRenderer.invoke("runeos:sync-cancel", id); },
+        configureHighscores(options) { return ipcRenderer.invoke("runeos:highscores-configure", options); },
+        syncHighscores(id, tables) { return ipcRenderer.invoke("runeos:highscores-sync", id, tables); },
         writeApplicationLog(report) {
             return ipcRenderer.invoke("runeos:application-log", report);
         },

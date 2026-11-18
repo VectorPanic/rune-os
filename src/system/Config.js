@@ -390,6 +390,7 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
     sync: {
         enabled: true,
         apiEnabled: false,
+        highscoresEnabled: false,
         baseUrl: "http://localhost:8888/rune-cloud/v1/",
         timeoutMs: 15000,
         maxFiles: 10000,

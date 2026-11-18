@@ -40,7 +40,9 @@ runeos.system.Startup.start = function(options) {
         Object.keys(options).forEach(function(key) { launchOptions[key] = options[key]; });
         launchOptions.libraryRootUrl = root;
         launchOptions.config = settings;
-        return runeos.system.Startup.m_prepareSync(launchOptions, environment).then(function() {
+        return runeos.system.Startup.m_prepareHighscores(launchOptions, environment).then(function() {
+            return runeos.system.Startup.m_prepareSync(launchOptions, environment);
+        }).then(function() {
             return runeos.bootstrap(launchOptions);
         });
     });
@@ -68,6 +70,25 @@ runeos.system.Startup.m_prepareSync = function(options, environment) {
         options.syncProvider = new runeos.sync.ApiSyncProvider(environment, info.rootUrl);
     }).catch(function(error) {
         console.warn("API sync setup: " + error.message);
+    });
+};
+
+/**
+ * Configures the optional native highscore provider independently of library sync.
+ *
+ * @param {Object} options Prepared runtime options.
+ * @param {Object} environment Optional native bridge.
+ * @returns {Promise} Provider readiness without contacting the server.
+ * @private
+ */
+runeos.system.Startup.m_prepareHighscores = function(options, environment) {
+    if (!options.config.sync.highscoresEnabled || options.highscoreProvider || !environment ||
+        typeof environment["configureHighscores"] !== "function" ||
+        typeof environment["syncHighscores"] !== "function") return Promise.resolve();
+    return environment["configureHighscores"](options.config.sync).then(function() {
+        options.highscoreProvider = new runeos.sync.HighscoreApiProvider(environment);
+    }).catch(function(error) {
+        console.warn("Highscore sync setup: " + error.message);
     });
 };
 

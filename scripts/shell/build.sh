@@ -109,6 +109,8 @@ google-closure-compiler \
 --js "./../../src/scene/type/Boot.js" \
 --js "./../../src/sync/SyncOperation.js" \
 --js "./../../src/sync/SyncProvider.js" \
+--js "./../../src/sync/HighscoreSync.js" \
+--js "./../../src/sync/HighscoreApiProvider.js" \
 --js "./../../src/sync/ApiSyncProvider.js" \
 --js "./../../src/sync/LibrarySync.js" \
 --js "./../../src/system/Main.js" \

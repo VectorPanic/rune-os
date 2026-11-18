@@ -7,6 +7,7 @@ const fileInfo = require("./file-info.cjs");
 const watchLibrary = require("./library-watch.cjs");
 const createApplicationLog = require("./application-log.cjs");
 const registerSync = require("./sync/bridge.cjs");
+const HighscoreService = require("./sync/highscores.cjs");
 
 /** Creates the shared debug/distribution window and owns native fullscreen input. */
 module.exports = function launch(page, options) {
@@ -15,6 +16,15 @@ module.exports = function launch(page, options) {
     const libraryWatchers = new WeakMap();
     const libraryLogs = new WeakMap();
     const librarySync = registerSync(ipcMain, getLibraryRoot);
+    const highscoreServices = new WeakMap();
+    ipcMain.handle("runeos:highscores-configure", function(event, options) {
+        getLibraryRoot(event.sender);
+        return highscoreServices.get(event.sender).configure(options);
+    });
+    ipcMain.handle("runeos:highscores-sync", function(event, id, tables) {
+        getLibraryRoot(event.sender);
+        return highscoreServices.get(event.sender).sync(id, tables);
+    });
     ipcMain.handle("runeos:application-log", function(event, report) {
         getLibraryRoot(event.sender);
         return libraryLogs.get(event.sender)(report);
@@ -64,12 +74,14 @@ module.exports = function launch(page, options) {
 
         const contents = window.webContents;
         libraryRoots.set(contents, libraryRootUrl);
+        highscoreServices.set(contents, new HighscoreService());
         librarySync.attach(contents, {rootUrl: libraryRootUrl, directory: layout.remote});
         libraryLogs.set(contents, createApplicationLog(settingsRootUrl));
         const watcher = watchLibrary(layout.local);
         libraryWatchers.set(contents, watcher);
         contents.on("destroyed", function() {
             watcher.close();
+            highscoreServices.get(contents).dispose();
             librarySync.dispose(contents).catch(function(error) { console.warn("Sync disposal: " + error.message); });
         });
 
