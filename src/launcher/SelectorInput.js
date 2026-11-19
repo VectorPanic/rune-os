@@ -102,12 +102,39 @@ runeos.launcher.SelectorInput.prototype.read = function(step, keyboard, gamepads
  * @private
  */
 runeos.launcher.SelectorInput.prototype.m_readAction = function(step, keyboard, gamepads) {
-    if (keyboard.justPressed("F5") || (gamepads && gamepads.justHeld &&
-        gamepads.justHeld(runeos.input.Gamepad.SELECT, this.m_config.refreshHoldMs, step))) return "refresh";
-    if (keyboard.justPressed("ENTER") || (gamepads &&
-        (gamepads.justPressed(runeos.input.Gamepad.A) || gamepads.justPressed(runeos.input.Gamepad.START)))) return "launch";
-    
+    if (this.m_isRefreshRequested(step, keyboard, gamepads)) return "refresh";
+    if (this.m_isLaunchRequested(keyboard, gamepads)) return "launch";
+
     return null;
+};
+
+/**
+ * Checks the keyboard shortcut or controller hold for a library refresh.
+ *
+ * @param {number} step Elapsed frame time.
+ * @param {runeos.input.Keyboard} keyboard Sampled keyboard.
+ * @param {?runeos.input.Gamepads} gamepads Optional controllers.
+ *
+ * @returns {boolean}
+ * @private
+ */
+runeos.launcher.SelectorInput.prototype.m_isRefreshRequested = function(step, keyboard, gamepads) {
+    return keyboard.justPressed("F5") || !!(gamepads && gamepads.justHeld &&
+        gamepads.justHeld(runeos.input.Gamepad.SELECT, this.m_config.refreshHoldMs, step));
+};
+
+/**
+ * Checks the keyboard and controller shortcuts for starting the selected game.
+ *
+ * @param {runeos.input.Keyboard} keyboard Sampled keyboard.
+ * @param {?runeos.input.Gamepads} gamepads Optional controllers.
+ *
+ * @returns {boolean}
+ * @private
+ */
+runeos.launcher.SelectorInput.prototype.m_isLaunchRequested = function(keyboard, gamepads) {
+    return keyboard.justPressed("ENTER") || !!(gamepads &&
+        (gamepads.justPressed(runeos.input.Gamepad.A) || gamepads.justPressed(runeos.input.Gamepad.START)));
 };
 
 /**
