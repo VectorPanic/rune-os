@@ -17,6 +17,11 @@
  * never changed. Components receive only the groups relevant to their work.
  */
 runeos.system.Config = function(options) {
+    
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+    
     var copies = new runeos.system.config.Values();
     var values = copies.merge(runeos.system.Config.DEFAULTS, options, "config");
     new runeos.system.config.Validation().validate(values);
@@ -420,7 +425,7 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
         syncingLibrary: "Syncing...",
         updatingLibrary: "Updating library...",
         libraryUpToDate: "Library is up to date",
-        syncError: "Unable to sync games. Check the connection or sync settings. Updates will retry automatically.",
+        syncError: "Game sync failed. Retrying automatically.",
         noAvailableGames: "No games available. Check the library settings.",
         backgroundColor: "#151c28",
         textColor: "#ffffff",

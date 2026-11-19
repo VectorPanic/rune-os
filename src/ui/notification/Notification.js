@@ -66,12 +66,20 @@ runeos.ui.Notification = function(options) {
 
 
     /**
-     * Owned message label.
+     * Original message, independent of the current line breaks.
      *
-     * @type {runeos.text.TextField}
+     * @type {string}
      * @private
      */
-    this.m_textField = null;
+    this.m_message = "";
+
+    /**
+     * Owned text fields, one per displayed line.
+     *
+     * @type {!Array.<!runeos.text.TextField>}
+     * @private
+     */
+    this.m_lines = [];
 
     /**
      * Fade animations owned only by this component.
@@ -126,7 +134,7 @@ runeos.ui.Notification = function(options) {
     //--------------------------------------------------------------------------
 
     /**
-     * Constructs the owned label and initializes the hidden state.
+     * Initializes the background and hidden state.
      */
     this.m_construct();
 };
@@ -157,7 +165,7 @@ Object.defineProperty(runeos.ui.Notification.prototype, "message", {
      * @ignore
      */
     get : function() {
-        return this.m_textField.text;
+        return this.m_message;
     }
 });
 
@@ -177,7 +185,7 @@ runeos.ui.Notification.prototype.show = function(message, options) {
     if (this.m_disposed) return;
     this.hide();
     if (typeof message !== "string" || !message.trim()) return;
-    this.m_textField.text = message;
+    this.m_message = message;
     options = options || {};
     this.m_updateLayout(options.canvas);
     this.m_persistent = options.persistent === true;
@@ -214,6 +222,7 @@ runeos.ui.Notification.prototype.hide = function() {
  * @returns {undefined}
  */
 runeos.ui.Notification.prototype.setViewport = function(width, height, canvas) {
+    if (this.m_viewport.width === width && this.m_viewport.height === height) return;
     this.m_viewport.width = width;
     this.m_viewport.height = height;
     this.m_updateLayout(canvas);
@@ -235,7 +244,9 @@ runeos.ui.Notification.prototype.drawTo = function(canvas) {
         context.globalAlpha *= this.alpha;
         context.fillStyle = this.backgroundColor;
         context.fillRect(this.x, this.y, this.width, this.height);
-        this.m_textField.drawTo(canvas, this.x, this.y);
+        for (var i = 0; i < this.m_lines.length; i++) {
+            this.m_lines[i].drawTo(canvas, this.x, this.y);
+        }
     } finally {
         context.restore();
     }
@@ -274,7 +285,7 @@ runeos.ui.Notification.prototype.update = function(step) {
 };
 
 /**
- * Releases animations and the owned label once.
+ * Releases animations and the owned text fields once.
  *
  * @returns {undefined}
  * @ignore
@@ -285,6 +296,7 @@ runeos.ui.Notification.prototype.dispose = function() {
     this.m_disposed = true;
     this.m_tweens.dispose();
     runeos.display.DisplayObjectContainer.prototype.dispose.call(this);
+    this.m_lines.length = 0;
 };
 
 //------------------------------------------------------------------------------
@@ -292,18 +304,12 @@ runeos.ui.Notification.prototype.dispose = function() {
 //------------------------------------------------------------------------------
 
 /**
- * Constructs the message label and background presentation.
+ * Initializes the background presentation.
  *
  * @returns {undefined}
  * @private
  */
 runeos.ui.Notification.prototype.m_construct = function() {
-    this.m_textField = new runeos.text.TextField({
-        config: this.m_textConfig,
-        role: "notification",
-        color: this.m_config.textColor
-    });
-    this.addChild(this.m_textField);
     this.backgroundColor = this.m_config.backgroundColor;
     this.hide();
 };
@@ -319,15 +325,145 @@ runeos.ui.Notification.prototype.m_construct = function() {
 runeos.ui.Notification.prototype.m_updateLayout = function(canvas) {
     var padding = this.m_config.paddingPx;
     var margin = this.m_config.marginPx;
-    var textWidth = canvas ? this.m_textField.measure(canvas) : this.m_textField["textWidth"];
-    this.width = Math.max(0, Math.min(this.m_config.maxWidthPx, this.m_viewport.width - margin * 2,
-        Math.ceil(textWidth) + padding * 2));
-    this.height = this.m_textField.height + padding * 2;
+    var maxWidth = Math.max(0, Math.min(this.m_config.maxWidthPx, this.m_viewport.width - margin * 2));
+    var contentWidth = Math.max(0, maxWidth - padding * 2);
+    var layout = this.m_measureLines(contentWidth, canvas);
+    this.width = Math.min(maxWidth, Math.ceil(layout.width) + padding * 2);
+    this.height = this.m_layoutLineFields(layout.lines, Math.max(0, this.width - padding * 2));
     this.x = this.m_alignment === "left" ? margin : (this.m_viewport.width - this.width) / 2;
     this.y = Math.max(0, this.m_viewport.height - margin - this.height);
-    this.m_textField.x = padding;
-    this.m_textField.y = padding;
-    this.m_textField.width = Math.max(0, this.width - padding * 2);
+};
+
+/**
+ * Measures wrapped lines with the same font used for drawing.
+ *
+ * @param {number} width Available text width.
+ * @param {runeos.display.Canvas} [canvas] Borrowed measurement destination.
+ * @returns {{lines: !Array.<string>, width: number}}
+ * @private
+ */
+runeos.ui.Notification.prototype.m_measureLines = function(width, canvas) {
+    if (!this.m_message || width <= 0) return {lines: [], width: 0};
+    var field = this.m_getLineField(0);
+    var context = (canvas || field["canvas"])["context"];
+    context.save();
+    try {
+        context.font = field.font;
+        var lines = [];
+        var paragraphs = this.m_message.split(/\r\n?|\n/);
+        for (var i = 0; i < paragraphs.length; i++) {
+            this.m_wrapParagraph(paragraphs[i], width, context, lines);
+        }
+        var widest = 0;
+        for (var j = 0; j < lines.length; j++) {
+            widest = Math.max(widest, context.measureText(lines[j]).width);
+        }
+        return {lines: lines, width: widest};
+    } finally {
+        context.restore();
+    }
+};
+
+/**
+ * Wraps a paragraph at word boundaries and splits words wider than a line.
+ *
+ * @param {string} paragraph Text between explicit line breaks.
+ * @param {number} width Available text width.
+ * @param {CanvasRenderingContext2D} context Measurement context with the line font.
+ * @param {!Array.<string>} lines Destination for wrapped lines.
+ * @returns {undefined}
+ * @private
+ */
+runeos.ui.Notification.prototype.m_wrapParagraph = function(paragraph, width, context, lines) {
+    if (context.measureText(paragraph).width <= width) {
+        lines.push(paragraph);
+        return;
+    }
+    var words = paragraph.match(/\S+/g) || [];
+    var line = "";
+    for (var i = 0; i < words.length; i++) {
+        var word = words[i];
+        var candidate = line ? line + " " + word : word;
+        if (context.measureText(candidate).width <= width) {
+            line = candidate;
+            continue;
+        }
+        if (line) lines.push(line);
+        line = this.m_splitWord(word, width, context, lines);
+    }
+    lines.push(line);
+};
+
+/**
+ * Emits complete fragments of a long word and returns its final fragment.
+ *
+ * @param {string} word Word to fit.
+ * @param {number} width Available text width.
+ * @param {CanvasRenderingContext2D} context Measurement context with the line font.
+ * @param {!Array.<string>} lines Destination for complete fragments.
+ * @returns {string}
+ * @private
+ */
+runeos.ui.Notification.prototype.m_splitWord = function(word, width, context, lines) {
+    if (context.measureText(word).width <= width) return word;
+    var characters = Array.from(word);
+    var line = "";
+    for (var i = 0; i < characters.length; i++) {
+        var candidate = line + characters[i];
+        if (line && context.measureText(candidate).width > width) {
+            lines.push(line);
+            line = characters[i];
+        } else {
+            line = candidate;
+        }
+    }
+    return line;
+};
+
+/**
+ * Positions one field per line and returns the padded box height.
+ *
+ * @param {!Array.<string>} lines Wrapped message.
+ * @param {number} width Text field width.
+ * @returns {number}
+ * @private
+ */
+runeos.ui.Notification.prototype.m_layoutLineFields = function(lines, width) {
+    var padding = this.m_config.paddingPx;
+    var y = padding;
+    for (var i = 0; i < lines.length; i++) {
+        var field = this.m_getLineField(i);
+        field.text = lines[i];
+        field.x = padding;
+        field.y = y;
+        field.width = width;
+        y += field.height;
+    }
+    while (this.m_lines.length > lines.length) {
+        var unused = this.m_lines.pop();
+        this.removeChild(unused);
+        unused.dispose();
+    }
+    return y + padding;
+};
+
+/**
+ * Reuses an existing line field or creates the next one.
+ *
+ * @param {number} index Line position.
+ * @returns {!runeos.text.TextField}
+ * @private
+ */
+runeos.ui.Notification.prototype.m_getLineField = function(index) {
+    if (this.m_lines[index]) return this.m_lines[index];
+    var field = new runeos.text.TextField({
+        config: this.m_textConfig,
+        role: "notification",
+        color: this.m_config.textColor
+    });
+    this.m_lines.push(field);
+    this.addChild(field);
+    return field;
 };
 
 /**
