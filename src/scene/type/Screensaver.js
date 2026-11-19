@@ -429,13 +429,8 @@ runeos.scene.Screensaver.prototype.m_releaseCredits = function() {
  */
 runeos.scene.Screensaver.prototype.m_hasControllerActivity = function() {
     if (!this.m_gamepadFocused) return false;
-    var states;
-    try {
-        states = typeof navigator !== "undefined" && typeof navigator.getGamepads === "function" ? navigator.getGamepads() : [];
-    } catch (error) {
-        return false;
-    }
-    for (var i = 0; states && i < states.length; i++) {
+    var states = runeos.input.Gamepad.getStates();
+    for (var i = 0; i < states.length; i++) {
         if (runeos.input.Gamepad.isActive(states[i], this.m_config)) return true;
     }
     return false;

@@ -199,6 +199,22 @@ runeos.input.Gamepad.RIGHT = 15;
 //------------------------------------------------------------------------------
 
 /**
+ * Reads native controller snapshots and preserves their slot indices.
+ *
+ * @returns {!Array<?Gamepad>} Controller snapshots or an empty array.
+ */
+runeos.input.Gamepad.getStates = function() {
+    try {
+        if (typeof navigator !== "undefined" && typeof navigator.getGamepads === "function") {
+            return navigator.getGamepads() || [];
+        }
+    } catch (error) {
+        return [];
+    }
+    return [];
+};
+
+/**
  * Reads either a standard button snapshot or a legacy numeric button value.
  *
  * @param {*} button Browser button snapshot.

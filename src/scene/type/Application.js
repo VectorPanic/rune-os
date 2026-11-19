@@ -899,14 +899,7 @@ runeos.scene.Application.prototype.m_updateEscapeExit = function(step) {
  */
 runeos.scene.Application.prototype.m_updateGamepadExit = function(step) {
     if (!this.m_gamepadFocused) return false;
-    var states;
-    try {
-        states = typeof navigator !== "undefined" && typeof navigator.getGamepads === "function" ?
-            navigator.getGamepads() : [];
-    } catch (error) {
-        states = [];
-    }
-    states = states || [];
+    var states = runeos.input.Gamepad.getStates();
     step = typeof step === "number" && isFinite(step) ? Math.max(0, step) : 0;
     this.m_gamepadHolds.length = states.length;
     for (var i = 0; i < states.length; i++) {

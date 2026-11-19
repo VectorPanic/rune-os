@@ -30,11 +30,6 @@ runeos.system.Startup = function() {
  * @returns {Promise.<runeos.system.Main>} Started runtime.
  */
 runeos.system.Startup.start = function(options) {
-
-    //--------------------------------------------------------------------------
-    // Default arguments
-    //--------------------------------------------------------------------------
-
     options = options || {};
     var environment = typeof window !== "undefined" && window.runeosEnvironment;
     var root = options.libraryRootUrl || (environment && environment.libraryRootUrl) || "../library/local/";

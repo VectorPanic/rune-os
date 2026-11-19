@@ -482,14 +482,7 @@ runeos.input.Gamepads.prototype.reset = function() {
  */
 runeos.input.Gamepads.prototype.update = function() {
     if (this.m_disposed || !this.m_enabled || !this.m_focused) return;
-    var states;
-    try {
-        states = typeof navigator !== "undefined" && typeof navigator.getGamepads === "function" ?
-            navigator.getGamepads() : [];
-    } catch (error) {
-        states = [];
-    }
-    states = states || [];
+    var states = runeos.input.Gamepad.getStates();
     var count = Math.max(states.length, this.m_gamepads.length);
     for (var i = 0; i < count; i++) {
         var state = states[i];

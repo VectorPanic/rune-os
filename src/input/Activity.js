@@ -289,12 +289,7 @@ runeos.input.Activity.prototype.dispose = function() {
  */
 runeos.input.Activity.prototype.m_gamepadActive = function() {
     if (!this.m_gamepadConfig) return false;
-    var states;
-    try {
-        states = typeof navigator !== "undefined" && typeof navigator.getGamepads === "function" ? navigator.getGamepads() : [];
-    } catch (error) {
-        return false;
-    }
+    var states = runeos.input.Gamepad.getStates();
 
     for (var i = 0; i < states.length; i++) {
         if (runeos.input.Gamepad.isActive(states[i], this.m_gamepadConfig)) return true;
