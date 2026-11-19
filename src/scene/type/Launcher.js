@@ -1036,8 +1036,7 @@ runeos.scene.Launcher.prototype.m_playStartSound = function() {
 };
 
 /**
- * Animates the interface without changing selected maps, tiles or scroll
- * offsets.
+ * Resets the leave state and starts the launcher entrance.
  *
  * @returns {undefined}
  * @private
@@ -1047,6 +1046,17 @@ runeos.scene.Launcher.prototype.m_enter = function() {
     this.m_leaveFinished = false;
     this.m_leaveCallbacks = [];
     this.m_clearStartupOverlay();
+    this.m_animateEntrance();
+    this.m_showStartupOverlay();
+};
+
+/**
+ * Animates the tilemaps and category header while preserving selection and scroll.
+ *
+ * @returns {undefined}
+ * @private
+ */
+runeos.scene.Launcher.prototype.m_animateEntrance = function() {
     this.m_tilemaps.alpha = 0;
     this.m_tilemaps.y = this.m_config.enterOffsetYPx;
     this.m_categoryHeader.alpha = 0;
@@ -1065,23 +1075,31 @@ runeos.scene.Launcher.prototype.m_enter = function() {
         duration: this.m_config.menuFadeInMs,
         transition: runeos.tween.Quad.easeOut
     });
-    if (!this.m_hasEntered) {
-        this.m_hasEntered = true;
-        var overlay = new runeos.display.DisplayObject(
-            0, 0, runeos.display.Screen.DEFAULT_WIDTH, runeos.display.Screen.DEFAULT_HEIGHT
-        );
-        this.m_startupOverlay = overlay;
-        overlay.backgroundColor = runeos.system.Config.getGroup("boot").backgroundColor;
-        this["stage"].addChild(overlay);
-        this["tweens"].create({
-            target: overlay,
-            args: {alpha: 0},
-            duration: this.m_config.startupFadeMs,
-            transition: runeos.tween.Quad.easeOut,
-            scope: this,
-            onDispose: this.m_clearStartupOverlay
-        });
-    }
+};
+
+/**
+ * Shows and fades the startup overlay on the first entrance.
+ *
+ * @returns {undefined}
+ * @private
+ */
+runeos.scene.Launcher.prototype.m_showStartupOverlay = function() {
+    if (this.m_hasEntered) return;
+    this.m_hasEntered = true;
+    var overlay = new runeos.display.DisplayObject(
+        0, 0, runeos.display.Screen.DEFAULT_WIDTH, runeos.display.Screen.DEFAULT_HEIGHT
+    );
+    this.m_startupOverlay = overlay;
+    overlay.backgroundColor = runeos.system.Config.getGroup("boot").backgroundColor;
+    this["stage"].addChild(overlay);
+    this["tweens"].create({
+        target: overlay,
+        args: {alpha: 0},
+        duration: this.m_config.startupFadeMs,
+        transition: runeos.tween.Quad.easeOut,
+        scope: this,
+        onDispose: this.m_clearStartupOverlay
+    });
 };
 
 /**

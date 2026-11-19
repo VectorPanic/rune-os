@@ -433,6 +433,7 @@ runeos.scene.Screensaver.prototype.m_hasControllerActivity = function() {
     for (var i = 0; i < states.length; i++) {
         if (runeos.input.Gamepad.isActive(states[i], this.m_config)) return true;
     }
+    
     return false;
 };
 

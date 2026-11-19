@@ -924,6 +924,7 @@ runeos.scene.Application.prototype.m_updateGamepadExit = function(step) {
         }
         if (hold.elapsed >= this.m_config.exitHoldMs) return true;
     }
+    
     return false;
 };
 
