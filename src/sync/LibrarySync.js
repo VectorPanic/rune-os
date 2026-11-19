@@ -212,30 +212,27 @@ Object.defineProperty(runeos.sync.LibrarySync.prototype, "quiet", {
 //------------------------------------------------------------------------------
 
 /**
- * Advances scheduling only when the caller permits background work.
+ * Prepares and applies updates while Launcher permits synchronization.
  *
  * @param {number} step Elapsed frame time in milliseconds.
- * @param {boolean} allowed Launcher is active, focused and not launching.
- * @param {boolean} active A user input is held or newly pressed.
+ * @param {boolean} hasInput A user input is held or newly pressed.
  *
  * @returns {undefined}
  */
-runeos.sync.LibrarySync.prototype.update = function(step, allowed, active) {
-    if (this.m_disposed || !this.m_provider || !this.m_config.enabled) return;
-    this.m_allowed = !!allowed;
-    if (!allowed) {
-        this.m_idle = 0;
-        this.m_pause();
+runeos.sync.LibrarySync.prototype.updateInLauncher = function(step, hasInput) {
+    if (!this.m_canSync()) return;
+    this.m_allowed = true;
+    var elapsed = this.m_advance(step);
+    this.m_idle = hasInput ? 0 : this.m_idle + elapsed;
+
+    if (this.m_until > 0) return;
+    if (this.m_idle < this.m_config.idleDelayMs) {
+        if (this.m_requested) this.m_prepareUpdate();
         return;
     }
-    var elapsed = this.m_advance(step);
-    this.m_idle = active ? 0 : this.m_idle + elapsed;
-    var preparing = this.m_state === "idle" || this.m_state === "available";
-    if (this.m_until > 0 || (this.m_idle < this.m_config.idleDelayMs && !(this.m_requested && preparing))) return;
-    if (this.m_state === "idle") this.m_check();
-    else if (this.m_state === "available") this.m_stage();
-    else if (this.m_state === "ready") this.m_publish();
+    if (this.m_state === "ready") this.m_publish();
     else if (this.m_state === "refresh") this.m_refresh();
+    else this.m_prepareUpdate();
 };
 
 /**
@@ -247,14 +244,24 @@ runeos.sync.LibrarySync.prototype.update = function(step, allowed, active) {
  *
  * @returns {undefined}
  */
-runeos.sync.LibrarySync.prototype.prepare = function(step) {
-    if (this.m_disposed || !this.m_provider || !this.m_config.enabled) return;
+runeos.sync.LibrarySync.prototype.prepareInBackground = function(step) {
+    if (!this.m_canSync()) return;
     this.m_allowed = false;
     this.m_idle = 0;
     this.m_advance(step);
-    if (this.m_until > 0) return;
-    if (this.m_state === "idle") this.m_check();
-    else if (this.m_state === "available") this.m_stage();
+    if (this.m_until === 0) this.m_prepareUpdate();
+};
+
+/**
+ * Cancels preparation and resets the quiet period while sync is paused.
+ *
+ * @returns {undefined}
+ */
+runeos.sync.LibrarySync.prototype.pause = function() {
+    if (!this.m_canSync()) return;
+    this.m_allowed = false;
+    this.m_idle = 0;
+    this.m_pause();
 };
 
 /**
@@ -285,6 +292,27 @@ runeos.sync.LibrarySync.prototype.dispose = function() {
 //------------------------------------------------------------------------------
 // Private prototype methods
 //------------------------------------------------------------------------------
+
+/**
+ * Checks whether the scheduler can run.
+ *
+ * @returns {boolean} Whether synchronization is enabled and available.
+ * @private
+ */
+runeos.sync.LibrarySync.prototype.m_canSync = function() {
+    return !this.m_disposed && !!this.m_provider && this.m_config.enabled;
+};
+
+/**
+ * Checks for or stages an update when the current state allows preparation.
+ *
+ * @returns {undefined}
+ * @private
+ */
+runeos.sync.LibrarySync.prototype.m_prepareUpdate = function() {
+    if (this.m_state === "idle") this.m_check();
+    else if (this.m_state === "available") this.m_stage();
+};
 
 /**
  * Advances polling and retry delays using a finite, nonnegative frame duration.

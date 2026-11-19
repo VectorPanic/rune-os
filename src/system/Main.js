@@ -458,9 +458,11 @@ runeos.system.Main.prototype.m_syncLibrary = function(step) {
     var background = focused && (scene instanceof runeos.scene.Application ||
         (scene instanceof runeos.scene.Launcher && !allowed));
     if (background) {
-        this.m_librarySync.prepare(step);
+        this.m_librarySync.prepareInBackground(step);
+    } else if (allowed) {
+        this.m_librarySync.updateInLauncher(step, activity.active);
     } else {
-        this.m_librarySync.update(step, allowed, activity ? activity.active : false);
+        this.m_librarySync.pause();
     }
     if (scene instanceof runeos.scene.Launcher && allowed && this.m_librarySync.quiet && this.m_syncedCatalog) {
         this.m_applyLibrary(scene);
