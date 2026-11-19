@@ -18,6 +18,11 @@
  * and layout.
  */
 runeos.ui.CategoryHeader = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
     var settings = runeos.system.Config.getGroup("selector", options.config);
     var text = runeos.system.Config.getGroup("text", options.textConfig);

@@ -19,7 +19,7 @@
 runeos.application.ApplicationLauncher = function(options) {
 
     //--------------------------------------------------------------------------
-    // Default values
+    // Default arguments
     //--------------------------------------------------------------------------
 
     options = options || {};

@@ -17,6 +17,11 @@
  * or application execution. Inputs and library are supplied by its caller.
  */
 runeos.launcher.LauncherIdle = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

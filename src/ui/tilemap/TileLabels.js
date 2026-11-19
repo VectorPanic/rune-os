@@ -17,6 +17,11 @@
  * Draws into a supplied Canvas, avoiding an extra full-card pixel buffer.
  */
 runeos.ui.tilemap.TileLabels = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
     var resolved = runeos.ui.tilemap.TilemapOptions.resolve(options, "tiles");
 

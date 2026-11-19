@@ -17,6 +17,11 @@
  * and ranking traits. It owns no UI state and never changes game metadata.
  */
 runeos.launcher.MatchExplanation = function(tags, options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

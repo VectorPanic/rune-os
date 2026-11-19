@@ -18,6 +18,11 @@
  * stationary.
  */
 runeos.text.TextField = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
     var settings = runeos.system.Config.getGroup("text", options.config);
     var style = runeos.text.Typography.getStyle(options.role || "body", settings, options);

@@ -17,6 +17,11 @@
  * without depending on navigation, viewport layout, input or scenes.
  */
 runeos.ui.tilemap.TilemapTransitions = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
     var resolved = runeos.ui.tilemap.TilemapOptions.resolve(options);
 

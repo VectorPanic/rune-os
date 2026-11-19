@@ -16,6 +16,11 @@
  * No four-controller limit is imposed. Devices are reusable snapshots.
  */
 runeos.input.Gamepads = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

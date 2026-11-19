@@ -17,6 +17,11 @@
  * Native requests and images belong to this inspector and are cancelled together.
  */
 runeos.library.ContentInspector = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

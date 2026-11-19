@@ -17,6 +17,11 @@
  * transition without knowing about inactivity, input, scenes or OS configuration.
  */
 runeos.ui.ScreenDimmer = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

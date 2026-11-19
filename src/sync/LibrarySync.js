@@ -17,6 +17,11 @@
  * Providers own staged storage and atomic publication; scenes know neither.
  */
 runeos.sync.LibrarySync = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

@@ -28,6 +28,10 @@ runeos.scene.Screensaver = function(source, returnScene, options) {
     this.m_showExitHint = false;
     this.m_exitOnIdle = false;
 
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

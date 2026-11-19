@@ -16,6 +16,11 @@
  * rechecks. A failed refresh preserves the last usable definitions.
  */
 runeos.library.ScreensaverLibrary = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
     var environment = typeof window !== "undefined" && window.runeosEnvironment;
 

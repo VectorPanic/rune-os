@@ -18,6 +18,11 @@
  * Data, display resources and callbacks are not retained in this snapshot.
  */
 runeos.ui.tilemap.TilemapOptions = function(options, parent) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options === undefined ? {} : options;
     if (!options || typeof options !== "object" || Array.isArray(options)) {
         throw new TypeError("Expected TilemapOptions groups.");

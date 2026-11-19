@@ -17,6 +17,11 @@
  * caller-owned context and releases stale load callbacks on replacement/disposal.
  */
 runeos.ui.tilemap.TileAtlas = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
     var resolved = runeos.ui.tilemap.TilemapOptions.resolve(options, "tiles");
 

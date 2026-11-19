@@ -17,6 +17,11 @@
  * requests release their callbacks before notifying their consumer.
  */
 runeos.util.FileLoader = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

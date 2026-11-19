@@ -16,6 +16,11 @@
  * snapshots with pointer/key events and focus, without knowing scenes or UI.
  */
 runeos.input.Activity = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

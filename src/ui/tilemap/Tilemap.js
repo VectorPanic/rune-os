@@ -17,6 +17,11 @@
  * navigation.
  */
 runeos.ui.tilemap.Tilemap = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
     var resolved = runeos.ui.tilemap.TilemapOptions.resolve(options, "tiles");
     var settings = resolved.tiles;

@@ -17,6 +17,11 @@
  * fade animations, without input handlers, timers or scene dependencies.
  */
 runeos.ui.Notification = function(options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
 
     //--------------------------------------------------------------------------

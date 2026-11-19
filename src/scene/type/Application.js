@@ -18,7 +18,13 @@
  * Loads and drives a Rune application while it owns the shared screen output.
  */
 runeos.scene.Application = function(source, returnScene, options) {
+
+    //--------------------------------------------------------------------------
+    // Default arguments
+    //--------------------------------------------------------------------------
+
     options = options || {};
+    
     //--------------------------------------------------------------------------
     // Super call
     //--------------------------------------------------------------------------
