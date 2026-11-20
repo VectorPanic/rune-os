@@ -89,6 +89,13 @@ runeos.ui.CategoryHeader = function(options) {
     this.m_titleFadeRemaining = 0;
 
     /**
+     * Signed starting offset of the entering title, in pixels.
+     * @type {number}
+     * @private
+     */
+    this.m_titleSlideDistance = 0;
+
+    /**
      * Fixed game-count label beside the category title.
      *
      * @type {runeos.text.TextField}
@@ -145,6 +152,12 @@ runeos.ui.CategoryHeader.DEFAULT_WIDTH = 1280;
  * @constant {number}
  */
 runeos.ui.CategoryHeader.TITLE_FADE_MS = 180;
+
+/**
+ * Starting distance of the category title slide, in pixels.
+ * @constant {number}
+ */
+runeos.ui.CategoryHeader.TITLE_SLIDE_PX = 12;
 
 /**
  * Space reserved around the header labels.
@@ -292,10 +305,12 @@ runeos.ui.CategoryHeader.prototype.setCategory = function(name, description, ind
 };
 
 /**
- * Fades the current title in after navigation to a different category.
+ * Fades and slides the current title in after category navigation.
+ * @param {number} [direction=0] Negative for left, positive for right.
  * @returns {undefined}
  */
-runeos.ui.CategoryHeader.prototype.fadeInTitle = function() {
+runeos.ui.CategoryHeader.prototype.fadeInTitle = function(direction) {
+    this.m_titleSlideDistance = (direction || 0) * runeos.ui.CategoryHeader.TITLE_SLIDE_PX;
     this.m_titleFadeRemaining = runeos.ui.CategoryHeader.TITLE_FADE_MS;
     this.m_updateTitleFade(0);
 };
@@ -337,7 +352,7 @@ runeos.ui.CategoryHeader.prototype.update = function(step) {
 //------------------------------------------------------------------------------
 
 /**
- * Advances the title opacity while keeping the text visible during the fade.
+ * Advances the title fade and applies its eased horizontal offset.
  * @param {number} step Current time step in milliseconds.
  * @returns {undefined}
  * @private
@@ -345,7 +360,10 @@ runeos.ui.CategoryHeader.prototype.update = function(step) {
 runeos.ui.CategoryHeader.prototype.m_updateTitleFade = function(step) {
     this.m_titleFadeRemaining = Math.max(0, this.m_titleFadeRemaining - step);
     var remaining = this.m_titleFadeRemaining / runeos.ui.CategoryHeader.TITLE_FADE_MS;
-    this.m_titleField.alpha = this.m_titleField["style"].alpha * (1 - 0.55 * remaining * remaining);
+    var eased = remaining * remaining;
+    this.m_titleField.alpha = this.m_titleField["style"].alpha * (1 - 0.55 * eased);
+    var left = Math.max(0, Math.min(this.width, this.m_contentBounds.left));
+    this.m_titleField.x = left + this.m_titleSlideDistance * eased;
 };
 
 /**
@@ -457,7 +475,8 @@ runeos.ui.CategoryHeader.prototype.m_layoutHeading = function(left, available) {
     count.width = count.visible ? Math.min(remaining, Math.ceil(count["textWidth"]) + runeos.ui.CategoryHeader.TEXT_PADDING) : 0;
     var countGap = count.visible ? Math.min(gap, remaining - count.width) : 0;
     title.width = Math.min(Math.ceil(title["textWidth"]) + runeos.ui.CategoryHeader.TEXT_PADDING, Math.max(0, remaining - count.width - countGap));
-    title.x = left;
+    var fadeRemaining = this.m_titleFadeRemaining / runeos.ui.CategoryHeader.TITLE_FADE_MS;
+    title.x = left + this.m_titleSlideDistance * fadeRemaining * fadeRemaining;
     title.y = this.m_descriptionField.visible ? runeos.ui.CategoryHeader.TOP_PADDING : (this.height - title.height) / 2;
     count.x = left + title.width + countGap;
     count.y = title.y + (title.height - count.height) / 2;

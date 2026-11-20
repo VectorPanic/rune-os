@@ -1365,13 +1365,26 @@ runeos.scene.Launcher.prototype.m_onSelectionChange = function(map, tile, previo
     this.m_updateCategoryHeader();
     if (reason !== "navigation") return;
     var categoryChanged = map !== previous.tilemap;
-    if (map && categoryChanged) this.m_categoryHeader.fadeInTitle();
+    if (map && categoryChanged) this.m_animateCategoryEntry(map, previous.tilemap);
     if (!tile || !this.m_navigateSound) return;
     var effect = categoryChanged ? this.m_audioConfig.categoryChange : this.m_audioConfig.selection;
     if (!effect.enabled) return;
     this.m_navigateSound.volume = effect.volume;
     this.m_navigateSound.rate = effect.playbackRate * (1 - effect.pitchVariation + Math.random() * effect.pitchVariation * 2);
     this.m_navigateSound.play(true);
+};
+
+/**
+ * Animates the heading from the incoming category's side.
+ * @param {runeos.ui.tilemap.Tilemap} map Incoming category.
+ * @param {?runeos.ui.tilemap.Tilemap} previous Outgoing category.
+ * @returns {undefined}
+ * @private
+ */
+runeos.scene.Launcher.prototype.m_animateCategoryEntry = function(map, previous) {
+    var maps = this.m_tilemaps["tilemaps"];
+    var direction = previous ? (maps.indexOf(map) > maps.indexOf(previous) ? 1 : -1) : 0;
+    this.m_categoryHeader.fadeInTitle(direction);
 };
 
 /**
