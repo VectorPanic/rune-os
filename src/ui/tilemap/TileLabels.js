@@ -632,7 +632,7 @@ runeos.ui.tilemap.TileLabels.prototype.m_renderLabelBackground = function(contex
 };
 
 /**
- * Draws cached shading behind the selected icon's label area.
+ * Draws shading that reaches full strength at the title and covers the labels below.
  *
  * @param {CanvasRenderingContext2D} context Destination drawing context.
  *
@@ -643,7 +643,8 @@ runeos.ui.tilemap.TileLabels.prototype.m_renderLabelBackdrop = function(context)
     if (!this.selected || !this.m_hasVisibleImage() || this.m_config.labelGradientOpacity === 0) return;
     var label = this.m_subtitleField.visible ? this.m_subtitleField : this.m_titleField;
     var top = Math.max(0, label.y - this.m_config.labelGradientPaddingPx);
-    var gradient = this.m_getLabelGradient(context, top);
+    var bottom = Math.max(top + 1, this.m_titleField.y);
+    var gradient = this.m_getLabelGradient(context, top, bottom);
     context.save();
     try {
         context.globalAlpha *= this.imageOpacity;
@@ -659,14 +660,15 @@ runeos.ui.tilemap.TileLabels.prototype.m_renderLabelBackdrop = function(context)
  *
  * @param {CanvasRenderingContext2D} context Tile drawing context.
  * @param {number} top Gradient start position.
+ * @param {number} bottom Position where the shading reaches full strength.
  *
  * @returns {CanvasGradient} Cached gradient paint.
  * @private
  */
-runeos.ui.tilemap.TileLabels.prototype.m_getLabelGradient = function(context, top) {
+runeos.ui.tilemap.TileLabels.prototype.m_getLabelGradient = function(context, top, bottom) {
     var cached = this.m_labelGradient;
-    if (!cached || cached.context !== context || cached.width !== this.width || cached.height !== this.height || cached.top !== top) {
-        var gradient = context.createLinearGradient(0, top, 0, this.height);
+    if (!cached || cached.context !== context || cached.width !== this.width || cached.height !== this.height || cached.top !== top || cached.bottom !== bottom) {
+        var gradient = context.createLinearGradient(0, top, 0, bottom);
         gradient.addColorStop(0, "rgba(0,0,0,0)");
         gradient.addColorStop(1, "rgba(0,0,0," + this.m_config.labelGradientOpacity + ")");
         cached = {
@@ -674,6 +676,7 @@ runeos.ui.tilemap.TileLabels.prototype.m_getLabelGradient = function(context, to
             width: this.width,
             height: this.height,
             top: top,
+            bottom: bottom,
             paint: gradient
         };
         this.m_labelGradient = cached;
