@@ -288,7 +288,7 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
         positionSizePx: 16,
         detailSizePx: 16,
         studioSizePx: 13,
-        metadataSizePx: 14,
+        metadataSizePx: 18,
         stageSizePx: 13,
         reasonSizePx: 12,
         detailDelayMs: 200,
