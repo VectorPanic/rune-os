@@ -13,8 +13,8 @@
  * @class
  * @classdesc
  *
- * Chooses game-specific preferred Tile sizes using category relevance and
- * membership, without quotas or changes to relevance ordering. TileLayout
+ * Chooses game-specific preferred Tile sizes using category relevance,
+ * membership and promotion, without quotas or changes to relevance ordering. TileLayout
  * independently decides which requested sizes fit.
  */
 runeos.launcher.GameTilePriority = function(seed, config) {
@@ -45,7 +45,7 @@ runeos.launcher.GameTilePriority = function(seed, config) {
 //------------------------------------------------------------------------------
 
 /**
- * Maximum chance of requesting Large.
+ * Maximum unboosted chance of requesting Large.
  *
  * @type {number}
  * @const
@@ -53,7 +53,7 @@ runeos.launcher.GameTilePriority = function(seed, config) {
 runeos.launcher.GameTilePriority.LARGE_CHANCE = runeos.system.Config.DEFAULTS.priority.largeChance;
 
 /**
- * Maximum chance of requesting Wide.
+ * Maximum unboosted chance of requesting Wide.
  *
  * @type {number}
  * @const
@@ -93,7 +93,8 @@ runeos.launcher.GameTilePriority.prototype.getStrength = function(score, maximum
 
 /**
  * Requests a size; the existing packer may reduce it when it cannot fit.
- * Normal remains possible even at maximum promotion strength.
+ * Promotion reallocates part of the remaining Normal probability to Large and
+ * Wide, using their configured weights.
  *
  * @param {string} categoryId Category identifier.
  * @param {string} gameId Game identifier.
@@ -101,10 +102,15 @@ runeos.launcher.GameTilePriority.prototype.getStrength = function(score, maximum
  * @param {number} maximum Maximum category relevance.
  * @param {number} memberships Category membership count.
  *
+ * @param {number} [promotion] Optional integer boost from 0 to 100.
  * @returns {number} Zero (Normal), one (Wide) or two (Large).
  */
-runeos.launcher.GameTilePriority.prototype.choose = function(categoryId, gameId, score, maximum, memberships) {
+runeos.launcher.GameTilePriority.prototype.choose = function(categoryId, gameId, score, maximum, memberships, promotion) {
     var strength = this.getStrength(score, maximum, memberships);
+    if (typeof promotion === "number" && promotion > 0 && promotion <= 100 && Math.floor(promotion) === promotion) {
+        var normalChance = 1 - strength * (this.m_config.largeChance + this.m_config.wideChance);
+        strength += normalChance * (promotion / 100);
+    }
     var random = this.m_random(categoryId, gameId);
     var large = this.m_config.largeChance * strength;
     var wide = this.m_config.wideChance * strength;

@@ -334,7 +334,9 @@ runeos.launcher.CategoryTilemapManager.prototype.m_updateTile = function(tile, r
     tile.backgroundColor = game.backgroundColor || this.m_config.backgroundColor;
     tile.imageUrl = game.imageAvailable === false ? "" : game.image || "";
     tile.relevance = row.score;
-    tile.priority = this.priorities.choose(group.category.id, row.gameId, row.score, group.maximumRelevance, memberships);
+    tile.priority = this.priorities.choose(
+        group.category.id, row.gameId, row.score, group.maximumRelevance, memberships, game.promotion
+    );
     return tile;
 };
 

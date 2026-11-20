@@ -76,6 +76,7 @@ runeos.catalog.GameRegistry = function(tags, baseTags) {
  *     binary: string,
  *     stage: (string|undefined),
  *     year: (number|undefined),
+ *     promotion: (number|undefined),
  *     description: (string|undefined),
  *     developer: (string|undefined),
  *     type: (string|undefined),
