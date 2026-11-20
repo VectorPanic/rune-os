@@ -82,6 +82,13 @@ runeos.ui.CategoryHeader = function(options) {
     this.m_titleField = null;
 
     /**
+     * Remaining time in the title fade, in milliseconds.
+     * @type {number}
+     * @private
+     */
+    this.m_titleFadeRemaining = 0;
+
+    /**
      * Fixed game-count label beside the category title.
      *
      * @type {runeos.text.TextField}
@@ -132,6 +139,12 @@ runeos.ui.CategoryHeader.prototype.constructor = runeos.ui.CategoryHeader;
  * @constant {number}
  */
 runeos.ui.CategoryHeader.DEFAULT_WIDTH = 1280;
+
+/**
+ * Duration of the title fade after category navigation, in milliseconds.
+ * @constant {number}
+ */
+runeos.ui.CategoryHeader.TITLE_FADE_MS = 180;
 
 /**
  * Space reserved around the header labels.
@@ -279,6 +292,15 @@ runeos.ui.CategoryHeader.prototype.setCategory = function(name, description, ind
 };
 
 /**
+ * Fades the current title in after navigation to a different category.
+ * @returns {undefined}
+ */
+runeos.ui.CategoryHeader.prototype.fadeInTitle = function() {
+    this.m_titleFadeRemaining = runeos.ui.CategoryHeader.TITLE_FADE_MS;
+    this.m_updateTitleFade(0);
+};
+
+/**
  * Sets the content span in local coordinates.
  *
  * @param {number} left Left edge in pixels.
@@ -306,12 +328,25 @@ runeos.ui.CategoryHeader.prototype.setContentBounds = function(left, width) {
  */
 runeos.ui.CategoryHeader.prototype.update = function(step) {
     if (this.width !== this.m_layoutSize.width || this.height !== this.m_layoutSize.height) this.m_updateLayout();
+    if (this.m_titleFadeRemaining > 0) this.m_updateTitleFade(step);
     runeos.display.DisplayObjectContainer.prototype.update.call(this, step);
 };
 
 //------------------------------------------------------------------------------
 // Private prototype methods
 //------------------------------------------------------------------------------
+
+/**
+ * Advances the title opacity while keeping the text visible during the fade.
+ * @param {number} step Current time step in milliseconds.
+ * @returns {undefined}
+ * @private
+ */
+runeos.ui.CategoryHeader.prototype.m_updateTitleFade = function(step) {
+    this.m_titleFadeRemaining = Math.max(0, this.m_titleFadeRemaining - step);
+    var remaining = this.m_titleFadeRemaining / runeos.ui.CategoryHeader.TITLE_FADE_MS;
+    this.m_titleField.alpha = this.m_titleField["style"].alpha * (1 - 0.55 * remaining * remaining);
+};
 
 /**
  * Runs the initialization steps owned by this instance.

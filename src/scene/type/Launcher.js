@@ -1363,8 +1363,11 @@ runeos.scene.Launcher.prototype.m_showLaunchError = function(request) {
 runeos.scene.Launcher.prototype.m_onSelectionChange = function(map, tile, previous, reason) {
     if (this.m_disposed || this.m_refreshing) return;
     this.m_updateCategoryHeader();
-    if (reason !== "navigation" || !tile || !this.m_navigateSound) return;
-    var effect = map !== previous.tilemap ? this.m_audioConfig.categoryChange : this.m_audioConfig.selection;
+    if (reason !== "navigation") return;
+    var categoryChanged = map !== previous.tilemap;
+    if (map && categoryChanged) this.m_categoryHeader.fadeInTitle();
+    if (!tile || !this.m_navigateSound) return;
+    var effect = categoryChanged ? this.m_audioConfig.categoryChange : this.m_audioConfig.selection;
     if (!effect.enabled) return;
     this.m_navigateSound.volume = effect.volume;
     this.m_navigateSound.rate = effect.playbackRate * (1 - effect.pitchVariation + Math.random() * effect.pitchVariation * 2);
