@@ -192,7 +192,7 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
         pulseAmount: 0.04
     },
     selector: {
-        glitch: true,
+        glitch: false,
         refreshHoldMs: 3000,
         navigationRepeatDelayMs: 500,
         navigationRepeatIntervalMs: 200,
@@ -288,7 +288,7 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
         positionSizePx: 16,
         detailSizePx: 16,
         studioSizePx: 13,
-        metadataSizePx: 18,
+        metadataSizePx: 14,
         stageSizePx: 13,
         reasonSizePx: 12,
         detailDelayMs: 200,

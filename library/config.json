@@ -17,7 +17,7 @@
     "muted": false
   },
   "selector": {
-    "glitch": true,
+    "glitch": false,
     "refreshHoldMs": 3000,
     "idleEnabled": true,
     "idleDelayMs": 15000,
