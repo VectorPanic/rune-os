@@ -207,6 +207,16 @@ runeos.launcher.CategoryTilemapManager.prototype.setData = function(games, categ
 };
 
 /**
+ * Recalculates preferred tile sizes using the loaded catalog and a new seed.
+ * @returns {undefined}
+ */
+runeos.launcher.CategoryTilemapManager.prototype.rotateTileSizes = function() {
+    if (this.m_disposed) return;
+    this.priorities.reseed();
+    this.refresh();
+};
+
+/**
  * Reconciles ranked Tiles by category and game ID, preserving retained instances.
  *
  * @returns {undefined}

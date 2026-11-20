@@ -558,6 +558,7 @@ runeos.scene.Launcher.prototype.init = function(previousScene) {
     if (this.m_notification) this.m_notification.hide();
     if (previousScene instanceof runeos.scene.Application) this.m_stopSoundPending = true;
     this.m_constructSounds();
+    if (previousScene instanceof runeos.scene.Screensaver && this.catalog) this.catalog.rotateTileSizes();
     this.m_loadCatalog();
     if (this.m_libraryRefresh.watching && (previousScene instanceof runeos.scene.Application)) this.m_refreshLibrary(false);
     else this.m_reveal();

@@ -77,6 +77,14 @@ runeos.launcher.GameTilePriority.m_sessionSeed = Math.floor(Math.random() * 4294
 //------------------------------------------------------------------------------
 
 /**
+ * Chooses a new seed for subsequent tile size decisions.
+ * @returns {undefined}
+ */
+runeos.launcher.GameTilePriority.prototype.reseed = function() {
+    this.m_seed = Math.floor(Math.random() * 4294967296);
+};
+
+/**
  * Normalizes relevance to the category's theoretical maximum. Exclusivity gives
  * a modest advantage: one category retains full strength, many approach 80%.
  *
