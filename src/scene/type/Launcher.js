@@ -245,6 +245,13 @@ runeos.scene.Launcher = function(options) {
     this.m_stopSoundPending = false;
 
     /**
+     * Optional screen effect for category navigation.
+     * @type {runeos.launcher.CategoryGlitch}
+     * @private
+     */
+    this.m_categoryGlitch = this.m_config.glitch ? new runeos.launcher.CategoryGlitch() : null;
+
+    /**
      * Whether the current exit should allow the start sound to finish.
      *
      * @type {boolean}
@@ -553,6 +560,7 @@ runeos.scene.Launcher.prototype.launchSelected = function() {
  */
 runeos.scene.Launcher.prototype.init = function(previousScene) {
     if (this.m_disposed) return;
+    if (this.m_categoryGlitch) this.m_categoryGlitch.reset();
     this.m_background.start();
     this.m_launcher.resume();
     if (this.m_notification) this.m_notification.hide();
@@ -565,6 +573,16 @@ runeos.scene.Launcher.prototype.init = function(previousScene) {
 };
 
 /**
+ * Draws the optional category effect over the launcher.
+ * @param {runeos.display.Canvas} canvas Shared output canvas.
+ * @returns {undefined}
+ * @override
+ */
+runeos.scene.Launcher.prototype.render = function(canvas) {
+    if (this.m_categoryGlitch) this.m_categoryGlitch.render(canvas);
+};
+
+/**
  * Updates the scene and processes one directional input per frame.
  *
  * @param {number} step Current time step.
@@ -572,6 +590,7 @@ runeos.scene.Launcher.prototype.init = function(previousScene) {
  * @returns {undefined}
  */
 runeos.scene.Launcher.prototype.update = function(step) {
+    if (this.m_categoryGlitch) this.m_categoryGlitch.update(step);
     if (this.m_disposed || this.m_refreshing) {
         this.m_selectorInput.reset();
         return;
@@ -1385,6 +1404,7 @@ runeos.scene.Launcher.prototype.m_animateCategoryEntry = function(map, previous)
     var maps = this.m_tilemaps["tilemaps"];
     var direction = previous ? (maps.indexOf(map) > maps.indexOf(previous) ? 1 : -1) : 0;
     this.m_categoryHeader.fadeInTitle(direction);
+    if (this.m_categoryGlitch) this.m_categoryGlitch.start(direction);
 };
 
 /**

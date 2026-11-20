@@ -94,6 +94,7 @@ google-closure-compiler \
 --js "./../../src/library/ScreensaverLibrary.js" \
 --js "./../../src/library/ContentFolders.js" \
 --js "./../../src/library/LocalLibrary.js" \
+--js "./../../src/launcher/CategoryGlitch.js" \
 --js "./../../src/launcher/GameTilePriority.js" \
 --js "./../../src/launcher/MatchExplanation.js" \
 --js "./../../src/launcher/GamePresentation.js" \
