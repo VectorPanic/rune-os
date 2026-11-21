@@ -98,8 +98,8 @@ runeos.display.Screen.prototype.appendTo = function(element) {
 };
 
 /**
- * Sets the resolution of the canvas, ensuring it does not exceed the default
- * dimensions.
+ * Fits the requested resolution within the default canvas dimensions while
+ * preserving its aspect ratio as closely as whole pixels allow.
  *
  * @param {number} width The desired width of the canvas.
  * @param {number} height The desired height of the canvas.
@@ -108,10 +108,9 @@ runeos.display.Screen.prototype.appendTo = function(element) {
  */
 runeos.display.Screen.prototype.setResolution = function(width, height) {
     if (this.m_canvas) {
-        this["canvas"].resize(
-            Math.min(width, runeos.display.Screen.DEFAULT_WIDTH),
-            Math.min(height, runeos.display.Screen.DEFAULT_HEIGHT)
-        );
+        var scale = Math.min(1, runeos.display.Screen.DEFAULT_WIDTH / width,
+            runeos.display.Screen.DEFAULT_HEIGHT / height);
+        this["canvas"].resize(Math.max(1, Math.round(width * scale)), Math.max(1, Math.round(height * scale)));
         this.m_canvas.element.style.imageRendering = "pixelated";
     }
 };
