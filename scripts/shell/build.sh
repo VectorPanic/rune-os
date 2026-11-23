@@ -61,6 +61,7 @@ google-closure-compiler \
 --js "./../../src/scene/Scene.js" \
 --js "./../../src/scene/Scenes.js" \
 --js "./../../src/application/ApplicationLog.js" \
+--js "./../../src/application/SdkLifecycle.js" \
 --js "./../../src/application/ApplicationIdle.js" \
 --js "./../../src/ui/GameMessage.js" \
 --js "./../../src/ui/ExitHint.js" \

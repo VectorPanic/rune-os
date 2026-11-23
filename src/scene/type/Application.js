@@ -63,7 +63,7 @@ runeos.scene.Application = function(source, returnScene, options) {
     /**
      * Running application instance.
      *
-     * @type {?{tick:(Function|undefined), stop:(Function|undefined), m_time:(Object|undefined), m_screen:(Object|undefined), m_callback:(Function|undefined)}}
+     * @type {?runeos.application.SdkLifecycle.Instance}
      * @protected
      */
     this.m_app = null;
@@ -236,14 +236,6 @@ runeos.scene.Application = function(source, returnScene, options) {
     this.m_exports = [];
 
     /**
-     * Legacy stop verification timer, cleared when shutdown completes.
-     *
-     * @type {?number}
-     * @private
-     */
-    this.m_stopTimer = null;
-
-    /**
      * Completion callbacks waiting for asynchronous application shutdown.
      *
      * @type {Array.<Function>}
@@ -412,12 +404,7 @@ runeos.scene.Application.prototype.update = function(step) {
     }
     if (this.m_updateIdle(step)) return;
     try {
-        if (typeof this.m_app.tick === "function") {
-            this.m_app.tick();
-        } else if (this.m_app.m_time) {
-            // Compatibility with bundles built before the public hosted tick API.
-            this.m_app.m_time.m_tick();
-        }
+        runeos.application.SdkLifecycle.tick(this.m_app);
     } catch (error) {
         this.m_fail(error);
     }
@@ -572,52 +559,9 @@ runeos.scene.Application.prototype.m_prepareExit = function() {
  * @private
  */
 runeos.scene.Application.prototype.m_stopApplication = function() {
-    var scene = this;
     var app = this.m_app;
     this.m_app = null;
-    var restored = false;
-    function restore() {
-        if (restored) return;
-        restored = true;
-        if (scene.m_stopTimer !== null) {
-            window.clearTimeout(scene.m_stopTimer);
-            scene.m_stopTimer = null;
-        }
-        // Older SDK stop() stores its callback but never releases it.
-        if (app && app.m_callback === restore) app.m_callback = null;
-        scene.m_finishExit();
-    }
-    if (app && typeof app.stop === "function") {
-        try {
-            app.stop(restore);
-            // Older SDK bundles dispose asynchronously but never invoke stop's callback.
-            // Check after their queued disposal, before reclaiming the shared screen.
-            if (!restored) {
-                scene.m_waitForLegacyStop(app, restore);
-            }
-        } catch (error) {
-            restore();
-        }
-    } else {
-        restore();
-    }
-};
-
-/**
- * Supports older SDK bundles that dispose asynchronously without calling back.
- *
- * @param {Object} app Application being stopped.
- * @param {Function} restore Shared once-only completion callback.
- *
- * @returns {undefined}
- * @private
- */
-runeos.scene.Application.prototype.m_waitForLegacyStop = function(app, restore) {
-    var scene = this;
-    this.m_stopTimer = window.setTimeout(function() {
-        scene.m_stopTimer = null;
-        if (app.m_time === null && app.m_screen === null) restore();
-    }, 0);
+    runeos.application.SdkLifecycle.stop(app, this.m_finishExit.bind(this));
 };
 
 /**
