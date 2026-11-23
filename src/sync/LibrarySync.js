@@ -15,6 +15,16 @@
  * Schedules one cancellable background operation at a time. Only the caller
  * decides when the system is quiet. Offline errors never replace local content.
  * Providers own staged storage and atomic publication; scenes know neither.
+ *
+ * Preparation: idle -> checking -> available -> staging -> ready.
+ * A check with no update returns to idle. Pausing a check or staging waits
+ * for cancellation to settle, then returns to available if an update remains
+ * or idle otherwise.
+ *
+ * Activation: ready -> publishing -> refresh -> refreshing -> idle.
+ * The quiet Launcher window allows each activation step to begin. Failed
+ * operations retry from idle, except a failed catalog reload retries from
+ * refresh so the committed snapshot is reused.
  */
 runeos.sync.LibrarySync = function(options) {
 
@@ -490,7 +500,7 @@ runeos.sync.LibrarySync.prototype.m_failOperation = function(operation, state, e
     this.m_requested = false;
     this.m_error = error instanceof Error ? error : new Error(String(error));
     this.m_retry(state);
-    console.warn("Library sync: " + error.message);
+    console.warn("Library sync failed during " + state, error);
 };
 
 /**
@@ -551,6 +561,6 @@ runeos.sync.LibrarySync.prototype.m_discard = function(prepared) {
     if (!prepared) return;
     var provider = this.m_provider;
     Promise.resolve().then(function() { return provider.discard(prepared); }).catch(function(error) {
-        console.warn("Sync staging cleanup: " + error.message);
+        console.warn("Library sync failed while discarding staged content", error);
     });
 };
