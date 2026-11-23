@@ -234,16 +234,8 @@ runeos.display.Canvas.prototype.renderDisplayObject = function(object, offsetX, 
         x >= this.width || y >= this.height || x + width <= 0 || y + height <= 0) {
         return;
     }
-    object.render();
-    var context = this.m_context;
-    context.save();
-    try {
-        context.globalAlpha *= object.alpha;
-
-        context.drawImage(object["canvas"].element, x, y, width, height);
-    } finally {
-        context.restore();
-    }
+    
+    this.m_renderBufferedObject(object, x, y, width, height);
 };
 
 //------------------------------------------------------------------------------
@@ -264,6 +256,30 @@ runeos.display.Canvas.prototype.dispose = function() {
 //------------------------------------------------------------------------------
 // Private prototype methods
 //------------------------------------------------------------------------------
+
+/**
+ * Renders the object into its own buffer and composites it at the saved bounds.
+ *
+ * @param {runeos.display.DisplayObject} object Object backed by a canvas.
+ * @param {number} x Destination left edge.
+ * @param {number} y Destination top edge.
+ * @param {number} width Destination width.
+ * @param {number} height Destination height.
+ *
+ * @returns {undefined}
+ * @private
+ */
+runeos.display.Canvas.prototype.m_renderBufferedObject = function(object, x, y, width, height) {
+    object.render();
+    var context = this.m_context;
+    context.save();
+    try {
+        context.globalAlpha *= object.alpha;
+        context.drawImage(object["canvas"].element, x, y, width, height);
+    } finally {
+        context.restore();
+    }
+};
 
 /**
  * Sets initial dimensions only for a newly created canvas.
