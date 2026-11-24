@@ -401,7 +401,7 @@ runeos.system.Config.DEFAULTS = new runeos.system.config.Values().freeze({
         timeoutMs: 15000,
         maxFiles: 10000,
         maxManifestSizeBytes: 2097152,
-        maxFileSizeBytes: 67108864,
+        maxFileSizeBytes: 268435456,
         maxTotalSizeBytes: 536870912,
         initialDelayMs: 1500,
         idleDelayMs: 5000,
