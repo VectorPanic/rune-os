@@ -349,7 +349,7 @@ runeos.text.TextField.prototype.render = function() {
 //------------------------------------------------------------------------------
 
 /**
- * Paints the prepared string with shared font, shadow and scroll behavior.
+ * Applies the text style and restores the canvas state after painting.
  *
  * @param {CanvasRenderingContext2D} context Destination drawing context.
  *
@@ -367,22 +367,28 @@ runeos.text.TextField.prototype.m_renderText = function(context) {
         context.shadowOffsetY = this.shadowOffsetY;
         context.textAlign = "left";
         context.textBaseline = "middle";
-        context.fillText(/**
-             * Measurement populated this cache before painting.
-             * @type {string}
-             */ (this.m_lastText), -this.m_scroll["offset"], this.height / 2);
-        if (this.m_textWidth > this.width) {
-            var next = this.m_textWidth + this.m_getScrollGap() - this.m_scroll["offset"];
-            if (next < this.width) {
-                context.fillText(/**
-             * Measurement populated this cache before painting.
-             * @type {string}
-             */ (this.m_lastText), next, this.height / 2);
-            }
-        }
+        this.m_drawTextCopies(context);
     } finally {
         context.restore();
     }
+};
+
+/**
+ * Draws the measured text and its repeated copy when it enters the visible field.
+ *
+ * @param {CanvasRenderingContext2D} context Destination with text styling applied.
+ *
+ * @returns {undefined}
+ * @private
+ */
+runeos.text.TextField.prototype.m_drawTextCopies = function(context) {
+    var text = (this.m_lastText);
+    var offset = this.m_scroll["offset"];
+    var baseline = this.height / 2;
+    context.fillText(text, -offset, baseline);
+    if (this.m_textWidth <= this.width) return;
+    var next = this.m_textWidth + this.m_getScrollGap() - offset;
+    if (next < this.width) context.fillText(text, next, baseline);
 };
 
 /**
