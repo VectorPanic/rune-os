@@ -382,7 +382,7 @@ runeos.text.TextField.prototype.m_renderText = function(context) {
  * @private
  */
 runeos.text.TextField.prototype.m_drawTextCopies = function(context) {
-    var text = (this.m_lastText);
+    var text = this.m_lastText || "";
     var offset = this.m_scroll["offset"];
     var baseline = this.height / 2;
     context.fillText(text, -offset, baseline);
@@ -393,7 +393,7 @@ runeos.text.TextField.prototype.m_drawTextCopies = function(context) {
 
 /**
  * Measures changed text or fonts and restarts scrolling when the content or
- * width changes.
+ * font or visible width changes.
  *
  * @param {CanvasRenderingContext2D} [context] Borrowed metrics context.
  *
@@ -402,22 +402,35 @@ runeos.text.TextField.prototype.m_drawTextCopies = function(context) {
  */
 runeos.text.TextField.prototype.m_updateMetrics = function(context) {
     var text = this.text === null || this.text === undefined ? "" : String(this.text);
-    if (text !== this.m_lastText || this.font !== this.m_lastFont) {
-        context = context || this["canvas"].context;
-        context.save();
-        try {
-            context.font = this.font;
-            this.m_textWidth = context.measureText(text).width;
-        } finally {
-            context.restore();
-        }
+    var needsMeasurement = text !== this.m_lastText || this.font !== this.m_lastFont;
+    var widthChanged = this.width !== this.m_lastWidth;
+    if (!needsMeasurement && !widthChanged) return;
+
+    if (needsMeasurement) {
+        this.m_textWidth = this.m_measureTextWidth(context || this["canvas"].context, text);
         this.m_lastText = text;
         this.m_lastFont = this.font;
-        this.m_scroll.restart(this.scrollDelay);
     }
-    if (this.width !== this.m_lastWidth) {
-        this.m_lastWidth = this.width;
-        this.m_scroll.restart(this.scrollDelay);
+    this.m_lastWidth = this.width;
+    this.m_scroll.restart(this.scrollDelay);
+};
+
+/**
+ * Measures text in the field's font and restores the borrowed canvas state.
+ *
+ * @param {CanvasRenderingContext2D} context Canvas context used for measurement.
+ * @param {string} text Normalized text.
+ *
+ * @returns {number} Natural text width in logical pixels.
+ * @private
+ */
+runeos.text.TextField.prototype.m_measureTextWidth = function(context, text) {
+    context.save();
+    try {
+        context.font = this.font;
+        return context.measureText(text).width;
+    } finally {
+        context.restore();
     }
 };
 
